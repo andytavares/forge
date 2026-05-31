@@ -1,0 +1,63 @@
+README.md
+  s_771d57146adca7::t_592352ebb7544e 11-13
+  s_771d57146adca7::t_9a36d0b8113794 111
+  s_771d57146adca7::t_6b5e1a54595e65 162-163
+  s_771d57146adca7::t_4da68b30534251 116,120-121
+  s_771d57146adca7::t_254e88c2297eb4 130-143
+.claude/doc-index.json
+  s_771d57146adca7::t_6c08a171d22701 3
+  s_771d57146adca7::t_f0f2214af0edd4 124-145
+  s_771d57146adca7::t_c9ca0d35821c21 7,19,25,29-30,32,38,45,54
+  s_771d57146adca7::t_a161f78360f8f3 60,65,71,76,82,88
+.claude/hooks/session-start.sh
+  s_771d57146adca7::t_696b2419255d59 39,41
+  s_771d57146adca7::t_c00e4d1af717b2 35-38,40,42-49
+.claude/hooks/post-compact.sh
+  s_771d57146adca7::t_cf2145489f7883 1-5,9-12,21-23
+  s_771d57146adca7::t_70cadf903dd0ce 6-8,13-20
+scripts/forge.sh
+  s_771d57146adca7::t_50f421b32fd135 141
+  s_771d57146adca7::t_07875cd9a59e80 13
+  s_771d57146adca7::t_023cf5da3d1333 385
+.claude/commands/forge.tasks.md
+  s_771d57146adca7::t_d9744dd6a2820a 11-19
+.claude/skills/project-constitution/SKILL.md
+  s_771d57146adca7::t_d136d9b2f2f36a 1-64
+.claude/commands/forge.clarify.md
+  s_771d57146adca7::t_f8be64963306da 13-21
+CLAUDE.md
+  s_771d57146adca7::t_77e7d84533b449 12
+.claude/commands/forge.constitution.md
+  s_771d57146adca7::t_ee2cfe7408da33 20
+  s_771d57146adca7::t_844611171d8c23 1-19,21-24
+.claude/settings.json
+  s_771d57146adca7::t_665e939ed97bd9 62-64
+.claude/commands/forge.implement.md
+  s_771d57146adca7::t_f1dc56841f436d 10-15,22-28
+forge-blog.md
+  s_771d57146adca7::t_3b349e1d64b001 422
+  s_771d57146adca7::t_d6caeab9d510ce 163,165-170
+  s_771d57146adca7::t_4501ece37bba0e 64-73
+  s_771d57146adca7::t_e1507c3f986d3d 569
+  s_771d57146adca7::t_8ac74379c10972 58
+  s_771d57146adca7::t_afb30b098474d1 92,103
+  s_771d57146adca7::t_1a1f280570913a 342,347-349,351
+.claude/commands/forge.tdd.md
+  s_771d57146adca7::t_d5f17753726125 7-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "a422170da9ec7d6cfdfceb0a39b2c37ee24d396f",
+  "prompts": {},
+  "sessions": {
+    "s_771d57146adca7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9c91daa3-75e0-4525-9f89-2497204c3d15",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Andrew <andrew.tavaes87@gmail.com>"
+    }
+  }
+}
