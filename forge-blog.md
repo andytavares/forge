@@ -89,21 +89,22 @@ That's progressive disclosure. The keep-`SKILL.md`-under-500-lines guideline fro
 
 ### What I put in skills (and why each one earns its keep)
 
-The scaffold ships thirteen, listed below. The pattern: a skill exists when there's a repeatable decision Claude must make that needs more than a sentence of rules.
+The scaffold ships twelve, listed below. The pattern: a skill exists when there's a repeatable decision Claude must make that needs more than a sentence of rules.
 
-- **`tdd-workflow`** — codifies the researcher → test-author → implementer sequence and routes work through subagents. References cover per-language test naming and BDD spec style.
+> **v0.4.0 pivot:** The implementation pipeline skills (`task-decomposition`, `clarify-spec`, `implement-plan`) were removed. Forge is now a knowledge layer that enhances whatever implementation tool you already use. See [Layer 7: The knowledge base](#layer-7-the-knowledge-base----ask-for-everyone) and `INTEGRATING.md` for the context handoff protocol.
+
+- **`tdd-workflow`** — codifies the researcher → test-author → code-reviewer sequence and routes work through subagents. References cover per-language test naming and BDD spec style.
 - **`canonical-research`** — codifies the official-docs-first rule and the citation format (URL + verbatim quote) for every external claim.
-- **`find-reuse`** — before writing any new helper, run a grep/AST sweep for existing implementations and return ranked candidates. Backed by a hook so Claude can't quietly skip it.
+- **`find-reuse`** — before writing any new helper, run a text + structural (ast-grep) sweep for existing implementations and return ranked candidates. Backed by a hook so Claude can't quietly skip it.
+- **`ast-search`** — structural code search via `ast-grep` (or `semgrep` fallback). Finds by code shape, not string. Called automatically by `find-reuse`; also available standalone via `/forge.ast-search`.
 - **`repo-conventions`** — read 2-3 analogous files before creating a new one. Mirror their naming, error style, import order, and test placement.
 - **`code-review`** — structured rubric for reviewing diffs (security, perf, conventions, coverage, docs).
 - **`doc-sync`** — the rules the `doc-keeper` subagent follows when updating markdown.
 - **`codebase-stats`** — answers quantitative questions about the repo (line counts by language, test ratio, contributor breakdown, churn) using `scc`, `tokei`, or `cloc`.
 - **`pattern-survey`** — finds every implementation of a concern (auth, retries, logging, etc.) across the codebase, clusters by approach, identifies the dominant pattern and outliers, and recommends convergence.
 - **`build-audit`** — diagnoses build/test/tooling problems by collecting data points, cross-referencing official docs, and ranking hypotheses by confidence × impact.
-- **`task-decomposition`** — converts a feature spec into a dependency-ordered task list with routing metadata. Each task is ≤ 200 lines of change and has explicit acceptance criteria.
-- **`clarify-spec`** — scans a task list for underspecification, contradictions, and implicit dependencies. Returns structured questions (not answers) for the user to resolve interactively.
-- **`implement-plan`** — validates the task graph (DAG, no missing dependencies, all routing fields resolved) and produces a per-task routing decision before any code is written.
 - **`project-constitution`** — interactive, LLM-assisted authoring of `.forge/constitution.md`. Scans the repo for signals, drafts all six required sections (Purpose, Non-negotiables, Architectural principles, Risk posture, Team conventions, Out of scope), and walks the user through accepting, editing, or skipping each before writing.
+- **`research-topic`** — five-phase feasibility research workflow: topic intake, codebase scan, option enumeration via official docs, analysis (feasibility/complexity/risk/codebase-fit), and structured document assembly. Composes `canonical-research` for all external sourcing. Output is a durable `research.md` artifact in `.forge/NNN-slug/`.
 
 Notice what's not a skill: things that should always apply (those are in `CLAUDE.md`), things that need their own context window (those are subagents), and things that need deterministic enforcement (those are hooks).
 
@@ -124,10 +125,10 @@ Each one has one job. None of them tries to do another's job.
 |---|---|---|
 | `researcher` | Read code + canonical sources, output a plan. **No edits.** | Read, Grep, Glob, Bash, WebFetch |
 | `test-author` | Write failing tests against the plan. **No production code.** | Read, Edit, Write, Bash, Grep, Glob |
-| `implementer` | Minimum code to turn tests green. **No test edits.** | Read, Edit, Write, Bash, Grep, Glob |
 | `code-reviewer` | Structured review of the diff. **No edits.** | Read, Bash, Grep, Glob |
 | `doc-keeper` | Sync markdown to current code. **No code edits.** | Read, Edit, Write, Bash, Grep, Glob |
 | `build-detective` | Detect stack, write `.claude/stack.json`. | Read, Bash, Grep, Glob |
+| `codebase-oracle` | Answer any question about the codebase. **No edits.** | Read, Grep, Glob, Bash, WebFetch |
 
 The hard constraints (no edits / no code / no tests) are in the system prompt of each agent so the subagent will refuse if asked.
 
@@ -143,7 +144,7 @@ Three reasons:
 
 ![TDD loop with three subagents](diagrams/03-tdd-flow.svg)
 
-`/tdd <task>` runs all three in sequence as a single pipeline. The researcher produces a plan, `test-author` writes failing tests and confirms they fail, `implementer` makes them pass, and `code-reviewer` reviews the diff — all without mid-flow interruptions. The result is returned as a completed task summary.
+`/forge.tdd <task>` runs all three in sequence as a single pipeline. The researcher produces a plan, `test-author` writes failing tests and confirms they fail, your implementation tool makes them pass, and `code-reviewer` reviews the diff — all without mid-flow interruptions. The result is returned as a completed task summary.
 
 This mirrors what Anthropic's Security Engineering team described: their workflow went from "design doc → janky code → refactor → give up on tests" to "ask Claude for pseudocode, guide it through test-driven development, check in periodically" ([How Anthropic teams use Claude Code](https://www.anthropic.com/news/how-anthropic-teams-use-claude-code)).
 
@@ -163,7 +164,7 @@ A hook is a shell command, HTTP endpoint, or prompt that fires at a lifecycle ev
 
 `PreToolUse` is the powerful one. It can return JSON containing `decision: "block"` and a `reason` string, and Claude has to take that feedback into account ([Hooks reference](https://docs.claude.com/en/docs/claude-code/hooks)). That's the enforcement primitive.
 
-### The six hooks in the scaffold
+### The seven hooks in the scaffold
 
 1. **`session-start.sh`** — prints repo HEAD, branch, detected stack, uncommitted file count, and doc-staleness count. Also injects `.forge/constitution.md` between `=== project-constitution ===` and `=== end project-constitution ===` delimiters if the file exists and is under 2000 characters. stdout is added to Claude's context ([Hooks reference](https://docs.claude.com/en/docs/claude-code/hooks)).
 2. **`post-compact.sh`** — `PostCompact` hook. Reinjects `.forge/constitution.md` as `additionalContext` after context compaction, using the same 2000-character guard. Ensures the project constitution survives context window resets without manual intervention.
@@ -171,6 +172,7 @@ A hook is a shell command, HTTP endpoint, or prompt that fires at a lifecycle ev
 4. **`pre-edit-guard.sh`** — `PreToolUse` on `Edit`/`Write`. Enforces TDD **only in packages that already have tests**. If the package directory contains zero test files, the hook logs a warning to stderr and lets the edit through — backfilling coverage is a separate decision, not something this hook should force on legacy code. In tested packages it returns `decision: "block"` with a message routing Claude to `test-author` first.
 5. **`post-edit-format.sh`** — `PostToolUse` on `Edit`/`Write`. Runs the formatter declared in `stack.json`. Same script humans run locally and CI runs.
 6. **`post-edit-doc-mark.sh`** — `PostToolUse` on `Edit`/`Write`. Bumps `staleness_score` in `doc-index.json` for any markdown that references the edited path.
+7. **`speckit-context-inject.sh`** — `UserPromptSubmit` hook. Detects when the prompt begins with `/speckit.*` and injects `additionalContext` containing the current stack summary, stale doc count, and latest research brief path. Requires no changes to Speckit — Forge context arrives via the standard Claude Code context window.
 
 The hooks all live in `.claude/hooks/`, all start with `#!/usr/bin/env bash`, all read tool input JSON from stdin, and emit either nothing (exit 0 → proceed) or a small JSON object on stdout. That's the entire contract.
 
@@ -288,9 +290,9 @@ The harness fixes this with three coupled pieces:
 
 1. **`prompt-augment.sh`** detects intent verbs in the user's message and appends a reminder.
 2. **`find-reuse` skill** defines the search procedure: extract the verb-noun pair, ripgrep across the repo, rank candidates by domain proximity, language match, test coverage, and recency. Return the top five with `file:line`, signature, and a recommendation: **reuse / extend / new**.
-3. **`implementer` subagent** is instructed to refuse to introduce a new helper unless `find-reuse` returned zero suitable candidates **or** each candidate has a specific documented reason (different invariants, deprecated, layered dependency violation) — vague reasons don't count.
+3. **`find-reuse` skill** enforces that new code is only introduced when `find-reuse` returned zero suitable candidates **or** each candidate has a specific documented reason (different invariants, deprecated, layered dependency violation) — vague reasons don't count. Your implementation tool receives this verdict as context before writing anything.
 
-The result is not zero new code. It's that new code only appears when the existing patterns genuinely don't fit, and Claude has to say why before the implementer will write it.
+The result is not zero new code. It's that new code only appears when the existing patterns genuinely don't fit, and Claude has to say why before any implementation begins.
 
 `references/reuse-anti-patterns.md` in the skill enumerates the worst patterns to watch for: parallel parsers, drifted validators, snowflake retry loops, format-by-string-concat, one-off date parsers. These are the things that show up in every large codebase and cost the most to consolidate later.
 
@@ -336,26 +338,27 @@ This is the only sustainable shape: docs and code are linked by a checked-in ind
 
 ## The slash commands
 
-Fourteen commands tie the workflows together. Each is just a markdown file in `.claude/commands/` ([Slash commands](https://docs.claude.com/en/docs/claude-code/slash-commands)). Anthropic merged the older `.claude/commands/` system into skills — both still work, and the scaffold uses slash commands for high-leverage workflows that should appear in the `/` menu, and skills for the lower-level rules.
+Thirteen commands tie the knowledge layer together. Each is just a markdown file in `.claude/commands/` ([Slash commands](https://docs.claude.com/en/docs/claude-code/slash-commands)).
+
+> **v0.4.0:** The pipeline commands (`/forge.plan`, `/forge.tasks`, `/forge.clarify`, `/forge.implement`) were removed. Forge no longer owns the implementation workflow — it provides knowledge context to whichever tool you use (e.g. [Speckit](https://github.com/github/spec-kit)).
 
 | Command | What it does |
 |---|---|
 | `/forge.detect-stack` | Runs `build-detective`, writes `.claude/stack.json`, prints summary. |
-| `/forge.plan <task>` | Researcher subagent produces a written plan. No code. |
-| `/forge.tdd <task>` | Researcher → test-author → implementer → code-reviewer, runs as a single pipeline. |
+| `/forge.research <topic>` | Researcher subagent produces a structured feasibility brief: official-doc citations, codebase findings, options comparison, recommendation. Writes `.forge/NNN-slug/research.md`. |
+| `/forge.tdd <task>` | Researcher → test-author → code-reviewer, runs as a single pipeline. |
 | `/forge.review` | Code-reviewer subagent against `git diff HEAD`. |
 | `/forge.docs-sync` | Doc-keeper subagent runs a full markdown refresh. |
-| `/forge.find-reuse <task>` | Returns up to 5 ranked prior-art candidates. |
+| `/forge.find-reuse <term>` | Text + structural (ast-grep) search; returns up to 5 ranked prior-art candidates. |
+| `/forge.ast-search <pattern>` | Structural code search using `ast-grep`. Returns `file:line` matches for a code-shape pattern. |
 | `/forge.ask <question>` | Routes to `codebase-oracle`; answers any question about the codebase. |
 | `/forge.stats` | Quantitative repo summary — lines by language, test ratio, top contributors. |
 | `/forge.survey <topic>` | Pattern survey for a cross-cutting concern (auth, retries, logging, etc.). |
 | `/forge.audit <symptom>` | Diagnoses a build/test/tooling problem; ranks hypotheses by confidence × impact. |
-| `/forge.tasks <spec>` | Decomposes a feature spec into a numbered, dependency-ordered task list in `.forge/NNN-slug/tasks.md`. Presents an end-of-step menu. |
-| `/forge.clarify [NNN]` | Surfaces spec ambiguities via one AskUserQuestion per ambiguity; writes `.forge/NNN-slug/clarifications.md`. |
-| `/forge.implement [NNN]` | Validates the task graph, executes all tasks in an isolated git worktree, presents end-of-run AskUserQuestion menu. |
+| `/forge.context` | Writes `.forge/context-snapshot.json` — stack, stale docs, latest research brief — for any external tool to consume. |
 | `/forge.constitution` | Interactive authoring of `.forge/constitution.md` — create, update a section, or regenerate from scratch. |
 
-The first four are single-purpose utilities. The knowledge-base commands (`/ask`, `/stats`, `/survey`, `/audit`) route to the `codebase-oracle` and its skills. The last four form the feature pipeline: `/constitution` (one-time setup) → `/tasks` → `/clarify` → `/implement`.
+The knowledge-base commands (`/ask`, `/stats`, `/survey`, `/audit`) route to the `codebase-oracle` and its skills. The knowledge-layer workflow: `/constitution` (one-time setup) → `/research` (feasibility) → `/forge.context` (export snapshot for your implementation tool).
 
 ---
 
@@ -433,7 +436,7 @@ A walkthrough of `claude "fix the bug where /users/:id returns 500 when id is no
 5. Human approves the plan.
 6. `test-author` writes a single Go table test with the failing case. Confirms it fails. Commits the test.
 7. **PreToolUse hook** on `Edit` against the handler file: a test exists, edit proceeds.
-8. `implementer` adds the parse-and-respond-with-400 branch. Runs the package's tests. Green.
+8. Your implementation tool (e.g. Speckit) adds the parse-and-respond-with-400 branch, guided by the test-author's failing test and the researcher's plan. Runs the package's tests. Green.
 9. **PostToolUse hooks** run `gofmt` and bump `staleness_score` for any doc referencing the handler.
 10. `code-reviewer` runs against `git diff HEAD`. Returns: convention check passes, coverage one new test, security clean, performance neutral, no doc gaps. Verdict: approve.
 11. The doc-keeper runs because `staleness_score` was bumped — finds the docs/api/users.md file lists status codes; updates it to include 400, cites the new handler lines.
@@ -573,7 +576,7 @@ Prints the manifest (version, source, install date), lists every forge-owned fil
 
 ### The flow for releasing updates to your team
 
-1. Maintain the scaffold in its own git repo (e.g., `your-org/Forge`). The current release is v0.2.0.
+1. Maintain the scaffold in its own git repo (e.g., `your-org/Forge`). The current release is v0.4.0.
 2. Tag releases with semver. Bump `VERSION="..."` in `scripts/forge.sh` to match.
 3. Engineers in target repos pull the new scaffold and run `forge.sh update <their-repo>`.
 4. Backup snapshots make every update reversible.

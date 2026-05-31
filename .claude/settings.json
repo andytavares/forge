@@ -54,7 +54,10 @@
       { "hooks": [ { "type": "command", "command": ".claude/hooks/session-start.sh" } ] }
     ],
     "UserPromptSubmit": [
-      { "hooks": [ { "type": "command", "command": ".claude/hooks/prompt-augment.sh" } ] }
+      { "hooks": [
+        { "type": "command", "command": ".claude/hooks/prompt-augment.sh" },
+        { "type": "command", "command": ".claude/hooks/speckit-context-inject.sh" }
+      ]}
     ],
     "PreToolUse": [
       { "matcher": "Edit|Write", "hooks": [ { "type": "command", "command": ".claude/hooks/pre-edit-guard.sh" } ] }

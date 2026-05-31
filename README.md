@@ -7,10 +7,10 @@ A cookiecutter Claude Code harness for large multi-language codebases. Drop it i
 - **`CLAUDE.md`** template — short, signal-dense, repo-wide rules loaded every session.
 - **`.claude/settings.json`** — sane allow/deny permission set + hook wiring.
 - **`.mcp.json`** — MCP server config (filesystem + git out of the box, examples for the rest).
-- **Seven subagents** — researcher, test-author, implementer, code-reviewer, doc-keeper, build-detective, codebase-oracle.
-- **Thirteen skills** — canonical-research, tdd-workflow, repo-conventions, find-reuse, code-review, doc-sync, codebase-stats, pattern-survey, build-audit, task-decomposition, clarify-spec, implement-plan, project-constitution.
-- **Fourteen slash commands** — `/forge.detect-stack`, `/forge.plan`, `/forge.tdd`, `/forge.review`, `/forge.docs-sync`, `/forge.find-reuse`, `/forge.ask`, `/forge.stats`, `/forge.survey`, `/forge.audit`, `/forge.tasks`, `/forge.clarify`, `/forge.implement`, `/forge.constitution`.
-- **Six hooks** — session-start (injects repo facts + project constitution), prompt-augment, pre-edit-guard (TDD, only enforced in tested packages), post-edit-format, post-edit-doc-mark, post-compact (reinjects project constitution after context compaction).
+- **Six subagents** — researcher, test-author, code-reviewer, doc-keeper, build-detective, codebase-oracle.
+- **Twelve skills** — canonical-research, tdd-workflow, repo-conventions, find-reuse, ast-search, code-review, doc-sync, codebase-stats, pattern-survey, build-audit, project-constitution, research-topic.
+- **Thirteen slash commands** — `/forge.detect-stack`, `/forge.research`, `/forge.tdd`, `/forge.review`, `/forge.docs-sync`, `/forge.find-reuse`, `/forge.ast-search`, `/forge.ask`, `/forge.stats`, `/forge.survey`, `/forge.audit`, `/forge.context`, `/forge.constitution`.
+- **Seven hooks** — session-start (injects repo facts + project constitution), prompt-augment, pre-edit-guard (TDD, only enforced in tested packages), post-edit-format, post-edit-doc-mark, post-compact (reinjects project constitution after context compaction), speckit-context-inject (injects Forge context when a /speckit.* command fires).
 - **`detect-stack.sh`** — writes `.claude/stack.json` so Claude always uses your real build commands.
 - **`.claude-plugin/plugin.json`** — manifest so this can be distributed as a Claude Code plugin.
 - **`forge.sh`** — interactive installer with install / update / uninstall / status / restore.
@@ -122,11 +122,12 @@ After install, do these four things:
 2. **Review `.mcp.json`.** The default ships filesystem + git MCP servers. Uncomment / add servers your team actually uses (Linear, Sentry, internal docs portal, etc.).
 3. **Run `/forge.constitution`** to create `.forge/constitution.md`. This encodes your project's non-negotiables and gets injected into every session automatically.
 4. **Open Claude Code in the repo** and try a few commands:
-   - `/forge.detect-stack` — verify it detected your real build commands.
+   - `/forge.detect-stack` — verify it detected your real build commands and `ast_search_tool`.
    - `/forge.stats` — confirm you can get an honest line count.
    - `/forge.ask how does authentication work in this codebase?` — verify the oracle answers.
-   - `/forge.find-reuse "url parsing helper"` — verify the reuse skill works.
-   - `/forge.plan add a /healthz endpoint to the gateway` — verify the researcher produces a plan without writing code.
+   - `/forge.find-reuse "url parsing helper"` — verify the text + structural reuse search works.
+   - `/forge.research add a /healthz endpoint to the gateway` — verify the researcher produces a research brief.
+   - `/forge.context` — verify the context snapshot is written to `.forge/context-snapshot.json`.
 
 If any of these fail, run `/forge.detect-stack` first; most issues stem from a missing or stale `stack.json`.
 
@@ -144,28 +145,26 @@ Once created, the constitution is automatically injected into Claude's context a
 
 Commit `.forge/constitution.md` — it is a checked-in file that travels with the repo.
 
-## Feature workflow (tasks → clarify → implement)
+## Feature workflow
 
-Three slash commands provide a structured, spec-to-code pipeline for larger features:
+Forge v0.4.0 is a **knowledge layer**, not a pipeline. It enriches whatever implementation tool you already use rather than replacing it.
+
+The recommended workflow:
 
 ```bash
-# 1. Decompose a feature spec into a numbered task list
-/forge.tasks "add rate limiting to the API gateway"
+# 1. Research feasibility and options before committing to a spec
+/forge.research "add rate limiting to the API gateway"
 
-# 2. Interactively resolve ambiguities in the task list
-/forge.clarify
+# 2. Hand the research brief + codebase context to your implementation tool
+/forge.context   # writes .forge/context-snapshot.json for any tool to read
 
-# 3. Execute the task list in an isolated worktree
-/forge.implement
+# 3. Use your preferred implementation tool (e.g. Speckit / github/spec-kit)
+/speckit.specify  # Forge injects stack + stale-doc context automatically
 ```
 
-What each command does:
+**Migrating from `/forge.tasks` / `/forge.clarify` / `/forge.implement`:** These commands were removed in v0.4.0. The equivalent workflow using [Speckit](https://github.com/github/spec-kit) is `/speckit.specify` for spec authoring and `/speckit.constitute` for project setup. Forge's knowledge primitives (`/forge.research`, `/forge.find-reuse`, `/forge.ask`) continue to work unchanged and are automatically injected into Speckit sessions via the `speckit-context-inject.sh` hook.
 
-- **`/forge.tasks <spec>`** — runs the `researcher` subagent against the spec, then the `task-decomposition` skill to generate a structured, dependency-ordered task list. Writes it to `.forge/NNN-slug/tasks.md` and presents an end-of-step menu (accept / edit / regenerate).
-- **`/forge.clarify [NNN]`** — runs the `clarify-spec` skill to find every place a downstream implementer would face an arbitrary choice. Collects all ambiguities and records your answers in `.forge/NNN-slug/clarifications.md`.
-- **`/forge.implement [NNN]`** — runs the `implement-plan` skill to validate the task graph, resolves routing (TDD vs. implementer-direct, doc-sync needed), then executes tasks in order in a git worktree at `.worktrees/NNN-slug/`. Presents an end-of-run menu for review, open-PR, or follow-up actions. Full `code-reviewer` pass at the end.
-
-The `.forge/` folder (spec, tasks, clarifications) is committed. The `.worktrees/` folder is gitignored — merge the feature branch when you're satisfied.
+See `INTEGRATING.md` for the full context handoff protocol.
 
 ## Releasing updates to your team
 
