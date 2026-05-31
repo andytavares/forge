@@ -4,7 +4,7 @@
     {
       "path": "README.md",
       "title": "Forge — Claude Code harness",
-      "summary": "Installation, update, uninstall, and feature overview for the Forge Claude Code scaffold (v0.2.0). Covers project constitution, all 14 slash commands, 6 hooks, and 13 skills.",
+      "summary": "Installation, update, uninstall, and feature overview for the Forge Claude Code scaffold (v0.3.0). Covers project constitution, all 15 slash commands, 6 hooks, and 14 skills.",
       "owners": [],
       "referenced_code_paths": [
         "scripts/forge.sh",
@@ -35,7 +35,7 @@
     {
       "path": "forge-blog.md",
       "title": "Building a Claude Harness — design rationale",
-      "summary": "Long-form write-up of the harness design: CLAUDE.md + project constitution, 13 skills, subagents, 6 hooks (including post-compact), MCP, settings, and file-level installer ownership.",
+      "summary": "Long-form write-up of the harness design: CLAUDE.md + project constitution, 14 skills, subagents, 6 hooks (including post-compact), MCP, settings, and file-level installer ownership.",
       "owners": [],
       "referenced_code_paths": [
         "scripts/forge.sh",
@@ -142,6 +142,30 @@
       "owners": [],
       "referenced_code_paths": [],
       "last_verified_commit": "08c97d7",
+      "staleness_score": 0
+    },
+    {
+      "path": ".claude/commands/forge.research.md",
+      "title": "/forge.research — produce a structured research brief",
+      "summary": "Slash command: runs research-topic skill to produce a canonical-sources-first research document at .forge/NNN-slug/research.md. Includes official doc citations, codebase findings, options comparison, and a recommendation.",
+      "owners": [],
+      "referenced_code_paths": [
+        ".claude/skills/research-topic/SKILL.md",
+        ".claude/skills/canonical-research/SKILL.md"
+      ],
+      "last_verified_commit": "b8dd6cc",
+      "staleness_score": 0
+    },
+    {
+      "path": ".claude/skills/research-topic/SKILL.md",
+      "title": "research-topic skill",
+      "summary": "Five-phase research workflow: topic intake, codebase scan, option enumeration via official docs, analysis (feasibility/complexity/risk/fit), and structured document assembly using research-doc-schema.",
+      "owners": [],
+      "referenced_code_paths": [
+        ".claude/skills/research-topic/references/research-doc-schema.md",
+        ".claude/skills/canonical-research/SKILL.md"
+      ],
+      "last_verified_commit": "b8dd6cc",
       "staleness_score": 0
     }
   ]

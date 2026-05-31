@@ -8,8 +8,8 @@ A cookiecutter Claude Code harness for large multi-language codebases. Drop it i
 - **`.claude/settings.json`** — sane allow/deny permission set + hook wiring.
 - **`.mcp.json`** — MCP server config (filesystem + git out of the box, examples for the rest).
 - **Seven subagents** — researcher, test-author, implementer, code-reviewer, doc-keeper, build-detective, codebase-oracle.
-- **Thirteen skills** — canonical-research, tdd-workflow, repo-conventions, find-reuse, code-review, doc-sync, codebase-stats, pattern-survey, build-audit, task-decomposition, clarify-spec, implement-plan, project-constitution.
-- **Fourteen slash commands** — `/forge.detect-stack`, `/forge.plan`, `/forge.tdd`, `/forge.review`, `/forge.docs-sync`, `/forge.find-reuse`, `/forge.ask`, `/forge.stats`, `/forge.survey`, `/forge.audit`, `/forge.tasks`, `/forge.clarify`, `/forge.implement`, `/forge.constitution`.
+- **Fourteen skills** — canonical-research, tdd-workflow, repo-conventions, find-reuse, code-review, doc-sync, codebase-stats, pattern-survey, build-audit, task-decomposition, clarify-spec, implement-plan, project-constitution, research-topic.
+- **Fifteen slash commands** — `/forge.detect-stack`, `/forge.plan`, `/forge.research`, `/forge.tdd`, `/forge.review`, `/forge.docs-sync`, `/forge.find-reuse`, `/forge.ask`, `/forge.stats`, `/forge.survey`, `/forge.audit`, `/forge.tasks`, `/forge.clarify`, `/forge.implement`, `/forge.constitution`.
 - **Six hooks** — session-start (injects repo facts + project constitution), prompt-augment, pre-edit-guard (TDD, only enforced in tested packages), post-edit-format, post-edit-doc-mark, post-compact (reinjects project constitution after context compaction).
 - **`detect-stack.sh`** — writes `.claude/stack.json` so Claude always uses your real build commands.
 - **`.claude-plugin/plugin.json`** — manifest so this can be distributed as a Claude Code plugin.
