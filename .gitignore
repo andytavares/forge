@@ -1,0 +1,33 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Archives
+*.zip
+*.tar.gz
+*.tgz
+
+# Local Claude settings (keep shared settings, ignore local overrides)
+.claude/settings.local.json
+.claude/stack.json
+
+# MCP config (may contain secrets)
+.mcp.json
+
+# Forge installer backups
+.forge-backups/
+
+# Editor
+.vscode/
+.idea/
+
+# Node (if scripts ever use npm)
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/

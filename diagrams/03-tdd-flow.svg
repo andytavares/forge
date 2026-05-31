@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 620" font-family="-apple-system, system-ui, sans-serif">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fafaf7"/>
+      <stop offset="100%" stop-color="#eaf2eb"/>
+    </linearGradient>
+    <filter id="ss3" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.18"/>
+    </filter>
+    <marker id="arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+  <rect width="980" height="620" fill="url(#bg3)"/>
+
+  <text x="490" y="42" font-size="22" font-weight="700" text-anchor="middle" fill="#222">The TDD Loop, Run by Three Subagents</text>
+  <text x="490" y="66" font-size="13" text-anchor="middle" fill="#666">Researcher → Test Author → Implementer. Each runs in its own context window.</text>
+
+  <!-- Box: Researcher -->
+  <g filter="url(#ss3)">
+    <rect x="60" y="110" width="260" height="160" rx="12" fill="#fff" stroke="#d97757" stroke-width="2.5"/>
+    <text x="190" y="140" font-size="15" font-weight="700" text-anchor="middle" fill="#222">researcher</text>
+    <text x="190" y="160" font-size="11" text-anchor="middle" fill="#888">subagent · isolated context</text>
+    <text x="80" y="186" font-size="12" fill="#444">• Reads CLAUDE.md, related code</text>
+    <text x="80" y="206" font-size="12" fill="#444">• Hits canonical docs via MCP</text>
+    <text x="80" y="226" font-size="12" fill="#444">• Returns a plan + acceptance criteria</text>
+    <text x="80" y="250" font-size="11" fill="#aaa" font-style="italic">no edits, no implementation</text>
+  </g>
+
+  <!-- Box: Test author -->
+  <g filter="url(#ss3)">
+    <rect x="360" y="110" width="260" height="160" rx="12" fill="#fff" stroke="#5b8def" stroke-width="2.5"/>
+    <text x="490" y="140" font-size="15" font-weight="700" text-anchor="middle" fill="#222">test-author</text>
+    <text x="490" y="160" font-size="11" text-anchor="middle" fill="#888">subagent · isolated context</text>
+    <text x="380" y="186" font-size="12" fill="#444">• Receives plan + criteria</text>
+    <text x="380" y="206" font-size="12" fill="#444">• Writes failing tests only</text>
+    <text x="380" y="226" font-size="12" fill="#444">• Runs them, confirms they fail</text>
+    <text x="380" y="250" font-size="11" fill="#aaa" font-style="italic">no production code</text>
+  </g>
+
+  <!-- Box: Implementer -->
+  <g filter="url(#ss3)">
+    <rect x="660" y="110" width="260" height="160" rx="12" fill="#fff" stroke="#3aa66b" stroke-width="2.5"/>
+    <text x="790" y="140" font-size="15" font-weight="700" text-anchor="middle" fill="#222">implementer</text>
+    <text x="790" y="160" font-size="11" text-anchor="middle" fill="#888">subagent · isolated context</text>
+    <text x="680" y="186" font-size="12" fill="#444">• Reads tests + plan</text>
+    <text x="680" y="206" font-size="12" fill="#444">• Writes minimum code to pass</text>
+    <text x="680" y="226" font-size="12" fill="#444">• Re-runs full test suite</text>
+    <text x="680" y="250" font-size="11" fill="#aaa" font-style="italic">no test edits</text>
+  </g>
+
+  <!-- Arrows -->
+  <path d="M320 190 L360 190" stroke="#666" stroke-width="2" marker-end="url(#arr3)"/>
+  <path d="M620 190 L660 190" stroke="#666" stroke-width="2" marker-end="url(#arr3)"/>
+
+  <!-- Hooks below -->
+  <g filter="url(#ss3)">
+    <rect x="60" y="320" width="860" height="100" rx="12" fill="#fff" stroke="#a06ed4" stroke-width="2"/>
+    <text x="80" y="350" font-size="14" font-weight="700" fill="#222">PreToolUse hook on Edit/Write</text>
+    <text x="80" y="372" font-size="12" fill="#555">Blocks production-file edits unless a corresponding test file exists or was just created. Returns </text>
+    <text x="80" y="390" font-size="12" font-family="ui-monospace,Menlo,monospace" fill="#7f50b3">decision: "block"</text>
+    <text x="200" y="390" font-size="12" fill="#555">with feedback telling Claude to write the test first.</text>
+    <text x="80" y="410" font-size="11" font-style="italic" fill="#888">Deterministic enforcement — the model cannot opt out.</text>
+  </g>
+
+  <!-- Hooks bottom -->
+  <g filter="url(#ss3)">
+    <rect x="60" y="450" width="860" height="100" rx="12" fill="#fff" stroke="#e0a82e" stroke-width="2"/>
+    <text x="80" y="480" font-size="14" font-weight="700" fill="#222">PostToolUse hook on Edit/Write</text>
+    <text x="80" y="502" font-size="12" fill="#555">Runs the project's formatter and the affected tests. On failure, returns feedback for Claude to fix.</text>
+    <text x="80" y="522" font-size="12" fill="#555">Catches regressions before Claude moves on.</text>
+    <text x="80" y="542" font-size="11" font-style="italic" fill="#888">Same script the human dev runs locally and in CI — no divergence.</text>
+  </g>
+</svg>

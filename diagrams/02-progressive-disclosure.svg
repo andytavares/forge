@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" font-family="-apple-system, system-ui, sans-serif">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fafaf7"/>
+      <stop offset="100%" stop-color="#f0ecdf"/>
+    </linearGradient>
+    <filter id="ss2" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  <rect width="980" height="560" fill="url(#bg2)"/>
+
+  <text x="490" y="44" font-size="22" font-weight="700" text-anchor="middle" fill="#222">Progressive Disclosure: Three Levels of Context</text>
+  <text x="490" y="68" font-size="13" text-anchor="middle" fill="#666">A skill ships zero context until needed. The model decides when to descend.</text>
+
+  <!-- Level 1 -->
+  <g filter="url(#ss2)">
+    <rect x="80" y="110" width="820" height="110" rx="12" fill="#fff" stroke="#d97757" stroke-width="2"/>
+    <rect x="80" y="110" width="14" height="110" rx="6" fill="#d97757"/>
+    <text x="115" y="138" font-size="16" font-weight="700" fill="#222">Level 1 — YAML frontmatter (always loaded)</text>
+    <text x="115" y="160" font-size="12" fill="#555">Lives in Claude's system prompt for every turn. Just the name + description.</text>
+    <text x="115" y="178" font-size="12" fill="#555">Goal: enough signal for Claude to decide whether to open the skill.</text>
+    <text x="115" y="202" font-size="11" font-family="ui-monospace,Menlo,monospace" fill="#888">~50 tokens · ~50 lines of YAML across the whole repo</text>
+  </g>
+
+  <!-- Arrow -->
+  <path d="M490 225 L490 250" stroke="#999" stroke-width="2" marker-end="url(#arr)"/>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#999"/>
+    </marker>
+  </defs>
+
+  <!-- Level 2 -->
+  <g filter="url(#ss2)">
+    <rect x="80" y="260" width="820" height="110" rx="12" fill="#fff" stroke="#5b8def" stroke-width="2"/>
+    <rect x="80" y="260" width="14" height="110" rx="6" fill="#5b8def"/>
+    <text x="115" y="288" font-size="16" font-weight="700" fill="#222">Level 2 — SKILL.md body (loaded when triggered)</text>
+    <text x="115" y="310" font-size="12" fill="#555">Full instructions, examples, decision rules. Claude reads it when the skill matches.</text>
+    <text x="115" y="328" font-size="12" fill="#555">Stays in the conversation for the rest of the session.</text>
+    <text x="115" y="352" font-size="11" font-family="ui-monospace,Menlo,monospace" fill="#888">target: under 500 lines per skill</text>
+  </g>
+
+  <path d="M490 375 L490 400" stroke="#999" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- Level 3 -->
+  <g filter="url(#ss2)">
+    <rect x="80" y="410" width="820" height="110" rx="12" fill="#fff" stroke="#3aa66b" stroke-width="2"/>
+    <rect x="80" y="410" width="14" height="110" rx="6" fill="#3aa66b"/>
+    <text x="115" y="438" font-size="16" font-weight="700" fill="#222">Level 3 — Reference files (loaded by Claude on demand)</text>
+    <text x="115" y="460" font-size="12" fill="#555">Long checklists, language-specific guides, schemas. Claude reads via bash/Read only when needed.</text>
+    <text x="115" y="478" font-size="12" fill="#555">Zero context cost until accessed.</text>
+    <text x="115" y="502" font-size="11" font-family="ui-monospace,Menlo,monospace" fill="#888">references/python.md · references/go.md · references/security-checklist.md</text>
+  </g>
+</svg>

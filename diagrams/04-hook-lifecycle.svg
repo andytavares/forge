@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" font-family="-apple-system, system-ui, sans-serif">
+  <defs>
+    <linearGradient id="bg4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fafaf7"/>
+      <stop offset="100%" stop-color="#efeaf6"/>
+    </linearGradient>
+    <filter id="ss4" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.15"/>
+    </filter>
+    <marker id="arr4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7f50b3"/>
+    </marker>
+  </defs>
+  <rect width="980" height="560" fill="url(#bg4)"/>
+
+  <text x="490" y="42" font-size="22" font-weight="700" text-anchor="middle" fill="#222">Hook Lifecycle: Where Determinism Lives</text>
+  <text x="490" y="66" font-size="13" text-anchor="middle" fill="#666">Hooks run in three cadences: per session, per turn, per tool call.</text>
+
+  <!-- Session lane -->
+  <g filter="url(#ss4)">
+    <rect x="40" y="110" width="900" height="100" rx="12" fill="#fff" stroke="#7f50b3" stroke-width="2"/>
+    <text x="60" y="138" font-size="14" font-weight="700" fill="#7f50b3">Per session</text>
+    <text x="60" y="160" font-size="12" fill="#444">SessionStart — print canonical commands, detected stack, env summary. stdout is added to Claude's context.</text>
+    <text x="60" y="180" font-size="12" fill="#444">SessionEnd — write a session summary, persist memory notes.</text>
+    <text x="60" y="200" font-size="11" font-style="italic" fill="#888">Use to inject project state Claude needs immediately.</text>
+  </g>
+
+  <!-- Turn lane -->
+  <g filter="url(#ss4)">
+    <rect x="40" y="230" width="900" height="100" rx="12" fill="#fff" stroke="#7f50b3" stroke-width="2"/>
+    <text x="60" y="258" font-size="14" font-weight="700" fill="#7f50b3">Per turn</text>
+    <text x="60" y="280" font-size="12" fill="#444">UserPromptSubmit — augment the prompt with detected stack, recent git diff, related ADRs.</text>
+    <text x="60" y="300" font-size="12" fill="#444">Stop / StopFailure — ensure tests ran and doc indexes are fresh before the turn closes.</text>
+    <text x="60" y="320" font-size="11" font-style="italic" fill="#888">Cheapest place to inject just-in-time context.</text>
+  </g>
+
+  <!-- Tool lane -->
+  <g filter="url(#ss4)">
+    <rect x="40" y="350" width="900" height="180" rx="12" fill="#fff" stroke="#7f50b3" stroke-width="2"/>
+    <text x="60" y="378" font-size="14" font-weight="700" fill="#7f50b3">Per tool call</text>
+    <text x="60" y="402" font-size="12" fill="#444">PreToolUse — gate the call. Return decision: "block" + reason if Claude is about to edit prod without tests,</text>
+    <text x="60" y="420" font-size="12" fill="#444">fetch from a non-canonical domain, or duplicate an existing utility.</text>
+    <text x="60" y="446" font-size="12" fill="#444">PostToolUse — react after the call. Run formatter, run tests, re-index docs, scan for new TODOs.</text>
+    <text x="60" y="464" font-size="12" fill="#444">Cannot undo the call — but can surface feedback Claude must respond to.</text>
+    <text x="60" y="490" font-size="11" font-style="italic" fill="#888">Matchers limit scope: { "matcher": "Edit|Write", "hooks": [ ... ] }</text>
+    <text x="60" y="512" font-size="11" font-style="italic" fill="#888">Same hook code runs locally and in CI via headless mode.</text>
+  </g>
+</svg>
