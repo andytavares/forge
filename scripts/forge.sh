@@ -10,7 +10,7 @@
 
 set -euo pipefail
 
-VERSION="0.1.0"
+VERSION="0.2.0"
 ASSUME_YES="${FORGE_YES:-0}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MANIFEST_NAME=".forge-manifest.json"
@@ -138,6 +138,7 @@ list_user_owned_paths() {
 CLAUDE.md
 .claude/doc-index.json
 .claude/stack.json
+.forge/constitution.md
 PATHS
 }
 
@@ -381,7 +382,7 @@ ${BOLD}WHAT IS MANAGED${NC}
   scripts/detect-stack.sh, scripts/forge.sh.
 
 ${BOLD}WHAT IS NEVER OVERWRITTEN${NC}
-  CLAUDE.md (yours to customize), .claude/doc-index.json, .claude/stack.json.
+  CLAUDE.md (yours to customize), .claude/doc-index.json, .claude/stack.json, .forge/constitution.md.
 
 ${BOLD}BACKUPS${NC}
   Every update and every uninstall snapshots managed files to

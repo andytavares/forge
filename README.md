@@ -8,9 +8,9 @@ A cookiecutter Claude Code harness for large multi-language codebases. Drop it i
 - **`.claude/settings.json`** — sane allow/deny permission set + hook wiring.
 - **`.mcp.json`** — MCP server config (filesystem + git out of the box, examples for the rest).
 - **Seven subagents** — researcher, test-author, implementer, code-reviewer, doc-keeper, build-detective, codebase-oracle.
-- **Twelve skills** — canonical-research, tdd-workflow, repo-conventions, find-reuse, code-review, doc-sync, codebase-stats, pattern-survey, build-audit, task-decomposition, clarify-spec, implement-plan.
-- **Thirteen slash commands** — `/forge.detect-stack`, `/forge.plan`, `/forge.tdd`, `/forge.review`, `/forge.docs-sync`, `/forge.find-reuse`, `/forge.ask`, `/forge.stats`, `/forge.survey`, `/forge.audit`, `/forge.tasks`, `/forge.clarify`, `/forge.implement`.
-- **Five hooks** — session-start, prompt-augment, pre-edit-guard (TDD, only enforced in tested packages), post-edit-format, post-edit-doc-mark.
+- **Thirteen skills** — canonical-research, tdd-workflow, repo-conventions, find-reuse, code-review, doc-sync, codebase-stats, pattern-survey, build-audit, task-decomposition, clarify-spec, implement-plan, project-constitution.
+- **Fourteen slash commands** — `/forge.detect-stack`, `/forge.plan`, `/forge.tdd`, `/forge.review`, `/forge.docs-sync`, `/forge.find-reuse`, `/forge.ask`, `/forge.stats`, `/forge.survey`, `/forge.audit`, `/forge.tasks`, `/forge.clarify`, `/forge.implement`, `/forge.constitution`.
+- **Six hooks** — session-start (injects repo facts + project constitution), prompt-augment, pre-edit-guard (TDD, only enforced in tested packages), post-edit-format, post-edit-doc-mark, post-compact (reinjects project constitution after context compaction).
 - **`detect-stack.sh`** — writes `.claude/stack.json` so Claude always uses your real build commands.
 - **`.claude-plugin/plugin.json`** — manifest so this can be distributed as a Claude Code plugin.
 - **`forge.sh`** — interactive installer with install / update / uninstall / status / restore.
@@ -108,15 +108,17 @@ Prints the manifest (version, source, install date) and lists every managed path
 | `CLAUDE.md` | **Written if missing only** | **Never touched** | **Preserved** |
 | `.claude/doc-index.json` | Created empty if missing | **Never touched** | **Preserved** |
 | `.claude/stack.json` | Auto-generated | Re-run via `/forge.detect-stack` | **Preserved** |
+| `.forge/constitution.md` | Not created by installer | **Never touched** | **Preserved** |
 | `.forge-backups/` | n/a | Snapshots added | **Preserved** |
 
 ## First-run checklist
 
-After install, do these three things:
+After install, do these four things:
 
 1. **Edit `CLAUDE.md`.** Replace `{{REPO_NAME}}` and `{{LANGUAGES}}` with real values. Add any team-wide non-negotiable rules (max ~200 lines total — every line is loaded on every request).
 2. **Review `.mcp.json`.** The default ships filesystem + git MCP servers. Uncomment / add servers your team actually uses (Linear, Sentry, internal docs portal, etc.).
-3. **Open Claude Code in the repo** and try a few commands:
+3. **Run `/forge.constitution`** to create `.forge/constitution.md`. This encodes your project's non-negotiables and gets injected into every session automatically.
+4. **Open Claude Code in the repo** and try a few commands:
    - `/forge.detect-stack` — verify it detected your real build commands.
    - `/forge.stats` — confirm you can get an honest line count.
    - `/forge.ask how does authentication work in this codebase?` — verify the oracle answers.
@@ -124,6 +126,20 @@ After install, do these three things:
    - `/forge.plan add a /healthz endpoint to the gateway` — verify the researcher produces a plan without writing code.
 
 If any of these fail, run `/forge.detect-stack` first; most issues stem from a missing or stale `stack.json`.
+
+## Project constitution
+
+Before starting any feature work, create a project constitution — a short "soul file" that encodes your project's non-negotiables, architectural principles, and conventions:
+
+```bash
+/forge.constitution
+```
+
+This runs an interactive, LLM-assisted authoring flow that scans the repo for signals (README, CLAUDE.md, ADRs, `.forge/` history), drafts each of the six required sections (Purpose, Non-negotiables, Architectural principles, Risk posture, Team conventions, Out of scope), and asks you to accept, edit, or skip each one before writing `.forge/constitution.md`.
+
+Once created, the constitution is automatically injected into Claude's context at every session start (via `session-start.sh`) and after every context compaction (via `post-compact.sh`, using the `PostCompact` hook). A 2000-character guard prevents oversized constitutions from consuming context; Claude warns you if the file exceeds the limit. CLAUDE.md instructs Claude to treat the `=== project-constitution ===` block as top-level non-negotiables that override any conflicting instruction.
+
+Commit `.forge/constitution.md` — it is a checked-in file that travels with the repo.
 
 ## Feature workflow (tasks → clarify → implement)
 
@@ -143,8 +159,8 @@ Three slash commands provide a structured, spec-to-code pipeline for larger feat
 What each command does:
 
 - **`/forge.tasks <spec>`** — runs the `researcher` subagent against the spec, then the `task-decomposition` skill to generate a structured, dependency-ordered task list. Writes it to `.forge/NNN-slug/tasks.md` after your approval.
-- **`/forge.clarify [NNN]`** — runs the `clarify-spec` skill to find every place a downstream implementer would face an arbitrary choice. Presents ambiguities one at a time and records your answers in `.forge/NNN-slug/clarifications.md`.
-- **`/forge.implement [NNN]`** — runs the `implement-plan` skill to validate the task graph, resolves routing (TDD vs. implementer-direct, doc-sync needed), then executes tasks in order in a git worktree at `.worktrees/NNN-slug/`. Each task pauses for approval before the next. Full `code-reviewer` pass at the end.
+- **`/forge.clarify [NNN]`** — runs the `clarify-spec` skill to find every place a downstream implementer would face an arbitrary choice. Collects all ambiguities and records your answers in `.forge/NNN-slug/clarifications.md`.
+- **`/forge.implement [NNN]`** — runs the `implement-plan` skill to validate the task graph, resolves routing (TDD vs. implementer-direct, doc-sync needed), then executes tasks in order in a git worktree at `.worktrees/NNN-slug/`. Presents an end-of-run menu for review, open-PR, or follow-up actions. Full `code-reviewer` pass at the end.
 
 The `.forge/` folder (spec, tasks, clarifications) is committed. The `.worktrees/` folder is gitignored — merge the feature branch when you're satisfied.
 
