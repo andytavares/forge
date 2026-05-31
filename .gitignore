@@ -18,6 +18,9 @@
 # Forge installer backups
 .forge-backups/
 
+# Forge implementation worktrees
+.worktrees/
+
 # Editor
 .vscode/
 .idea/
