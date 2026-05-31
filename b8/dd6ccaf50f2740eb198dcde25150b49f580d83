@@ -1,0 +1,29 @@
+.forge/003-documentation-update/tasks.md
+  s_771d57146adca7::t_eb1ef4f578c353 1-48
+.forge/001-project-constitution/spec.md
+  s_771d57146adca7::t_f50ffd49c2ac88 1-19
+.forge/003-documentation-update/spec.md
+  s_771d57146adca7::t_219be4b5afd8cf 1
+.forge/001-project-constitution/tasks.md
+  s_771d57146adca7::t_58481cadec27db 1-123
+.forge/002-forge-installer-ownership/spec.md
+  s_771d57146adca7::t_b63ded43445be7 1-5
+.forge/002-forge-installer-ownership/tasks.md
+  s_771d57146adca7::t_8f24ad3fd7477a 1-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "b8dd6ccaf50f2740eb198dcde25150b49f580d83",
+  "prompts": {},
+  "sessions": {
+    "s_771d57146adca7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9c91daa3-75e0-4525-9f89-2497204c3d15",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Andrew <andrew.tavaes87@gmail.com>"
+    }
+  }
+}
