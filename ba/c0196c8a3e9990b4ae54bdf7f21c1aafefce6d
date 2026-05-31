@@ -1,0 +1,45 @@
+.claude/doc-index.json
+  s_c03a1b29967a74::t_7153f569cb0662 67
+  s_c03a1b29967a74::t_dae1cc959e680c 32
+  s_c03a1b29967a74::t_0b95d2f6655635 88
+  s_c03a1b29967a74::t_40ec513b54f896 100
+  s_c03a1b29967a74::t_23e4d570a86be2 113,124,137,150,163
+  s_c03a1b29967a74::t_36815550cbeb74 54
+  s_c03a1b29967a74::t_89795adc230ffa 19
+.forge/005-harness-as-knowledge-layer/spec.md
+  s_a172ac93d67062::t_7af69880ff1773 1-107
+.forge/005-harness-as-knowledge-layer/tasks.md
+  s_a172ac93d67062::t_2b912de3d0b150 37-39
+  s_a172ac93d67062::t_8d867287cbc6dc 1-36,40-46,48-55
+  s_a172ac93d67062::t_e3bf6d489f6d5f 47
+.forge/005-harness-as-knowledge-layer/research.md
+  s_a172ac93d67062::t_5b08f70385ad12 1-10,12-55,57-65,67-68,70-75,77-101,103-112,115-123,125,128,130,132,154,158,160-166,168,170-173,175-178,180,182-186,188-196,202-207,209,211,213,215,217,219-221,223,225,227,229,231,233-237
+  s_a172ac93d67062::t_f3d2e6a2e2a67e 11,56,66,69,76,102,113-114,124,126-127,129,131,133-153,155-157,159,167,169,174,179,181,187,197-201,208,210,212,214,216,218,238-243
+  s_a172ac93d67062::t_780e2224684792 222,224,226,228,230,232
+.forge/005-harness-as-knowledge-layer/topic.md
+  s_a172ac93d67062::t_b70f5097b3d36d 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "bac0196c8a3e9990b4ae54bdf7f21c1aafefce6d",
+  "prompts": {},
+  "sessions": {
+    "s_a172ac93d67062": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7952b4ca-e8a5-4ac8-93b7-c593764f6214",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Andrew <andrew.tavaes87@gmail.com>"
+    },
+    "s_c03a1b29967a74": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "75fca78b-cbcb-4eef-9997-15f47ae667ce",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Andrew <andrew.tavaes87@gmail.com>"
+    }
+  }
+}
