@@ -62,8 +62,8 @@ What update does:
 
 1. Snapshots every managed file into `<target>/.forge-backups/<timestamp>/` before changing anything.
 2. Shows you a diff summary of what will change.
-3. Rsyncs the new versions of the managed paths (`--delete` so removed files in the new version are removed in the target).
-4. **Never touches** `CLAUDE.md`, `.claude/doc-index.json`, or `.claude/stack.json` — those are yours.
+3. Copies updated forge-owned files to the target. Removes files that were forge-owned in the previous version but no longer exist in the new source. **Never touches files you created** in `.claude/skills/`, `.claude/commands/`, `.claude/hooks/`, or `.claude/agents/`.
+4. **Never touches** `CLAUDE.md`, `.claude/doc-index.json`, `.claude/stack.json`, or any file not listed in the manifest.
 5. If `.mcp.json` has been edited locally, writes the new version as `.mcp.json.new` and warns you to merge by hand.
 6. Updates the manifest with the new version and timestamp.
 
@@ -78,11 +78,11 @@ You can always roll back with `./scripts/forge.sh restore /path/to/your/repo <ba
 
 Uninstall:
 
-1. Takes a final backup of all managed files into `.forge-backups/<timestamp>/`.
-2. Removes only the managed paths — `CLAUDE.md`, `.claude/doc-index.json`, `.claude/stack.json` and the backups directory are preserved.
-3. Removes the manifest.
+1. Takes a final backup of all forge-owned files (from the manifest) into `.forge-backups/<timestamp>/`.
+2. Removes only files listed in the manifest — `CLAUDE.md`, `.claude/doc-index.json`, `.claude/stack.json`, `.forge/constitution.md`, and any files you created in the shared directories are preserved.
+3. Removes the manifest. Shared directories (`.claude/skills/`, etc.) are only removed if they are empty after forge files are deleted.
 
-If you want a clean slate, delete `.forge-backups/`, `CLAUDE.md`, and the leftover empty directories yourself.
+If you want a clean slate, delete `.forge-backups/`, `CLAUDE.md`, and any remaining files yourself.
 
 ## Status
 
@@ -90,16 +90,19 @@ If you want a clean slate, delete `.forge-backups/`, `CLAUDE.md`, and the leftov
 ./scripts/forge.sh status /path/to/your/repo
 ```
 
-Prints the manifest (version, source, install date) and lists every managed path with a check or warning.
+Prints the manifest (version, source, install date), lists forge-owned files (with a check or warning), and shows any files you created in shared directories.
 
 ## What's managed vs. what's yours
 
+Forge tracks every file it installs in `.forge-manifest.json`. It only ever creates, updates, or removes the specific files in that list. Your files in `.claude/skills/`, `.claude/commands/`, `.claude/hooks/`, and `.claude/agents/` co-exist safely — Forge never deletes them.
+
 | Path | Behavior on install | Behavior on update | Behavior on uninstall |
 |---|---|---|---|
-| `.claude/agents/` | Overwritten | Overwritten | Removed |
-| `.claude/skills/` | Overwritten | Overwritten | Removed |
-| `.claude/commands/` | Overwritten | Overwritten | Removed |
-| `.claude/hooks/` | Overwritten | Overwritten | Removed |
+| Forge files in `.claude/agents/` | Written | Updated; removed if deleted from forge source | Removed |
+| Forge files in `.claude/skills/` | Written | Updated; removed if deleted from forge source | Removed |
+| Forge files in `.claude/commands/` | Written | Updated; removed if deleted from forge source | Removed |
+| Forge files in `.claude/hooks/` | Written | Updated; removed if deleted from forge source | Removed |
+| **Your files in those dirs** | **Never touched** | **Never touched** | **Preserved** |
 | `.claude/settings.json` | Overwritten | Overwritten | Removed |
 | `.claude-plugin/plugin.json` | Overwritten | Overwritten | Removed |
 | `.mcp.json` | Written if missing | Written as `.mcp.json.new` if local edits exist | Removed |
@@ -108,6 +111,7 @@ Prints the manifest (version, source, install date) and lists every managed path
 | `CLAUDE.md` | **Written if missing only** | **Never touched** | **Preserved** |
 | `.claude/doc-index.json` | Created empty if missing | **Never touched** | **Preserved** |
 | `.claude/stack.json` | Auto-generated | Re-run via `/forge.detect-stack` | **Preserved** |
+| `.forge/constitution.md` | **Never created** | **Never touched** | **Preserved** |
 | `.forge-backups/` | n/a | Snapshots added | **Preserved** |
 
 ## First-run checklist
