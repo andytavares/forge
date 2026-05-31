@@ -16,7 +16,7 @@
         ".claude/commands/",
         ".claude/hooks/"
       ],
-      "last_verified_commit": "6b0fa8f",
+      "last_verified_commit": "524816b",
       "staleness_score": 0
     },
     {
@@ -29,7 +29,7 @@
         ".claude/doc-index.json",
         ".forge/constitution.md"
       ],
-      "last_verified_commit": "08c97d7",
+      "last_verified_commit": "a422170",
       "staleness_score": 0
     },
     {
@@ -51,7 +51,7 @@
         ".claude/agents/",
         ".claude/commands/"
       ],
-      "last_verified_commit": "6b0fa8f",
+      "last_verified_commit": "524816b",
       "staleness_score": 0
     },
     {
@@ -64,7 +64,7 @@
         ".claude/hooks/session-start.sh",
         ".claude/hooks/post-compact.sh"
       ],
-      "last_verified_commit": "08c97d7",
+      "last_verified_commit": "a422170",
       "staleness_score": 0
     },
     {
@@ -85,7 +85,7 @@
         ".claude/skills/research-topic/SKILL.md",
         ".claude/skills/canonical-research/SKILL.md"
       ],
-      "last_verified_commit": "b8dd6cc",
+      "last_verified_commit": "3f18020",
       "staleness_score": 0
     },
     {
@@ -97,7 +97,7 @@
         ".claude/skills/research-topic/references/research-doc-schema.md",
         ".claude/skills/canonical-research/SKILL.md"
       ],
-      "last_verified_commit": "b8dd6cc",
+      "last_verified_commit": "3f18020",
       "staleness_score": 0
     },
     {
@@ -110,7 +110,7 @@
         "scripts/detect-stack.sh",
         ".claude/skills/find-reuse/SKILL.md"
       ],
-      "last_verified_commit": "16bec0d",
+      "last_verified_commit": "524816b",
       "staleness_score": 0
     },
     {
@@ -121,7 +121,7 @@
       "referenced_code_paths": [
         ".claude/skills/ast-search/SKILL.md"
       ],
-      "last_verified_commit": "16bec0d",
+      "last_verified_commit": "524816b",
       "staleness_score": 0
     },
     {
@@ -134,7 +134,7 @@
         ".claude/doc-index.json",
         "scripts/forge.sh"
       ],
-      "last_verified_commit": "16bec0d",
+      "last_verified_commit": "524816b",
       "staleness_score": 0
     },
     {
@@ -147,7 +147,7 @@
         ".claude/doc-index.json",
         ".claude/settings.json"
       ],
-      "last_verified_commit": "16bec0d",
+      "last_verified_commit": "524816b",
       "staleness_score": 0
     },
     {
@@ -160,7 +160,7 @@
         ".claude/commands/forge.context.md",
         ".claude/stack.json"
       ],
-      "last_verified_commit": "16bec0d",
+      "last_verified_commit": "524816b",
       "staleness_score": 0
     }
   ]
