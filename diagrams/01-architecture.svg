@@ -35,8 +35,8 @@
 
   <rect width="980" height="640" fill="url(#bgGrad)"/>
 
-  <text x="490" y="44" font-size="22" font-weight="700" text-anchor="middle" fill="#222">The Claude Harness: Six Layers of Leverage</text>
-  <text x="490" y="68" font-size="13" text-anchor="middle" fill="#666">From persistent context at the top to deterministic enforcement at the bottom</text>
+  <text x="490" y="44" font-size="22" font-weight="700" text-anchor="middle" fill="#222">Forge: Six Layers of Knowledge-Layer Leverage</text>
+  <text x="490" y="68" font-size="13" text-anchor="middle" fill="#666">A knowledge layer for any codebase — enhances Speckit, Cursor, or any tool you already use</text>
 
   <!-- Layer F: User intent (bottom-up reasoning, drawn at top) -->
   <g filter="url(#softShadow)">

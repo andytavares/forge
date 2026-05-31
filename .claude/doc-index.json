@@ -4,7 +4,7 @@
     {
       "path": "README.md",
       "title": "Forge — Claude Code harness",
-      "summary": "Installation, update, uninstall, and feature overview for the Forge Claude Code scaffold (v0.3.0). Covers project constitution, all 15 slash commands, 6 hooks, and 14 skills.",
+      "summary": "Installation, update, uninstall, and feature overview for the Forge Claude Code scaffold (v0.4.0). Knowledge-layer model: 13 slash commands, 12 skills, 6 subagents, 7 hooks. Pipeline commands removed; use Speckit or your own tool for implementation.",
       "owners": [],
       "referenced_code_paths": [
         "scripts/forge.sh",
@@ -35,7 +35,7 @@
     {
       "path": "forge-blog.md",
       "title": "Building a Claude Harness — design rationale",
-      "summary": "Long-form write-up of the harness design: CLAUDE.md + project constitution, 14 skills, subagents, 6 hooks (including post-compact), MCP, settings, and file-level installer ownership.",
+      "summary": "Long-form write-up of the harness design: CLAUDE.md + project constitution, 12 skills (including ast-search), 6 subagents, 7 hooks, MCP, settings. v0.4.0 pivot: knowledge-layer model, pipeline removed, Speckit context injection.",
       "owners": [],
       "referenced_code_paths": [
         "scripts/forge.sh",
@@ -52,74 +52,6 @@
         ".claude/commands/"
       ],
       "last_verified_commit": "6b0fa8f",
-      "staleness_score": 0
-    },
-    {
-      "path": ".claude/commands/forge.tasks.md",
-      "title": "/forge.tasks — decompose a spec into a task list",
-      "summary": "Slash command: runs task-decomposition skill to produce .forge/NNN-slug/tasks.md. End-of-step AskUserQuestion menu.",
-      "owners": [],
-      "referenced_code_paths": [
-        ".claude/skills/task-decomposition/SKILL.md"
-      ],
-      "last_verified_commit": "08c97d7",
-      "staleness_score": 0
-    },
-    {
-      "path": ".claude/commands/forge.clarify.md",
-      "title": "/forge.clarify — resolve spec ambiguities interactively",
-      "summary": "Slash command: runs clarify-spec skill, collects all ambiguities at once via AskUserQuestion, and writes .forge/NNN-slug/clarifications.md.",
-      "owners": [],
-      "referenced_code_paths": [
-        ".claude/skills/clarify-spec/SKILL.md"
-      ],
-      "last_verified_commit": "08c97d7",
-      "staleness_score": 0
-    },
-    {
-      "path": ".claude/commands/forge.implement.md",
-      "title": "/forge.implement — execute a task list in a worktree",
-      "summary": "Slash command: runs implement-plan skill, creates a git worktree, executes tasks as a single pipeline, presents end-of-run AskUserQuestion menu.",
-      "owners": [],
-      "referenced_code_paths": [
-        ".claude/skills/implement-plan/SKILL.md",
-        ".claude/skills/task-decomposition/SKILL.md"
-      ],
-      "last_verified_commit": "08c97d7",
-      "staleness_score": 0
-    },
-    {
-      "path": ".claude/skills/task-decomposition/SKILL.md",
-      "title": "task-decomposition skill",
-      "summary": "Converts a feature spec into a dependency-ordered task list with routing metadata (T-NNN entries).",
-      "owners": [],
-      "referenced_code_paths": [
-        ".claude/skills/task-decomposition/references/task-schema.md"
-      ],
-      "last_verified_commit": "14dffe4",
-      "staleness_score": 0
-    },
-    {
-      "path": ".claude/skills/clarify-spec/SKILL.md",
-      "title": "clarify-spec skill",
-      "summary": "Scans a task list for ambiguities and returns structured questions for the user to resolve.",
-      "owners": [],
-      "referenced_code_paths": [
-        ".claude/skills/clarify-spec/references/ambiguity-patterns.md"
-      ],
-      "last_verified_commit": "14dffe4",
-      "staleness_score": 0
-    },
-    {
-      "path": ".claude/skills/implement-plan/SKILL.md",
-      "title": "implement-plan skill",
-      "summary": "Validates the task DAG, resolves routing fields, and produces a per-task routing plan before execution.",
-      "owners": [],
-      "referenced_code_paths": [
-        ".claude/skills/implement-plan/references/routing-rules.md",
-        ".claude/hooks/pre-edit-guard.sh"
-      ],
-      "last_verified_commit": "14dffe4",
       "staleness_score": 0
     },
     {
@@ -166,6 +98,69 @@
         ".claude/skills/canonical-research/SKILL.md"
       ],
       "last_verified_commit": "b8dd6cc",
+      "staleness_score": 0
+    },
+    {
+      "path": ".claude/skills/ast-search/SKILL.md",
+      "title": "ast-search skill",
+      "summary": "Structural code search using ast-grep (primary) or semgrep (fallback). Reads ast_search_tool from stack.json, returns file:line matches by code shape. Called by find-reuse; also available standalone via /forge.ast-search.",
+      "owners": [],
+      "referenced_code_paths": [
+        ".claude/skills/ast-search/references/pattern-syntax.md",
+        "scripts/detect-stack.sh",
+        ".claude/skills/find-reuse/SKILL.md"
+      ],
+      "last_verified_commit": "16bec0d",
+      "staleness_score": 0
+    },
+    {
+      "path": ".claude/commands/forge.ast-search.md",
+      "title": "/forge.ast-search — structural code search",
+      "summary": "Slash command: runs ast-search skill to find code by shape using ast-grep or semgrep. Returns file:line matches.",
+      "owners": [],
+      "referenced_code_paths": [
+        ".claude/skills/ast-search/SKILL.md"
+      ],
+      "last_verified_commit": "16bec0d",
+      "staleness_score": 0
+    },
+    {
+      "path": ".claude/commands/forge.context.md",
+      "title": "/forge.context — export context snapshot",
+      "summary": "Slash command: writes .forge/context-snapshot.json aggregating stack.json, stale doc-index entries, and latest research brief path. Single integration point for external tools.",
+      "owners": [],
+      "referenced_code_paths": [
+        ".claude/stack.json",
+        ".claude/doc-index.json",
+        "scripts/forge.sh"
+      ],
+      "last_verified_commit": "16bec0d",
+      "staleness_score": 0
+    },
+    {
+      "path": ".claude/hooks/speckit-context-inject.sh",
+      "title": "speckit-context-inject hook",
+      "summary": "UserPromptSubmit hook: detects /speckit.* commands and injects additionalContext with current stack summary and stale doc count. Requires no Speckit-side changes.",
+      "owners": [],
+      "referenced_code_paths": [
+        ".claude/stack.json",
+        ".claude/doc-index.json",
+        ".claude/settings.json"
+      ],
+      "last_verified_commit": "16bec0d",
+      "staleness_score": 0
+    },
+    {
+      "path": "INTEGRATING.md",
+      "title": "Integration guide — context handoff protocol",
+      "summary": "Documents the file-based context handoff (context-snapshot.json), UserPromptSubmit hook pattern for Speckit and other tools, and context snapshot JSON schema.",
+      "owners": [],
+      "referenced_code_paths": [
+        ".claude/hooks/speckit-context-inject.sh",
+        ".claude/commands/forge.context.md",
+        ".claude/stack.json"
+      ],
+      "last_verified_commit": "16bec0d",
       "staleness_score": 0
     }
   ]
