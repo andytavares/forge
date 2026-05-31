@@ -89,7 +89,7 @@ That's progressive disclosure. The keep-`SKILL.md`-under-500-lines guideline fro
 
 ### What I put in skills (and why each one earns its keep)
 
-The scaffold ships thirteen, listed below. The pattern: a skill exists when there's a repeatable decision Claude must make that needs more than a sentence of rules.
+The scaffold ships fourteen, listed below. The pattern: a skill exists when there's a repeatable decision Claude must make that needs more than a sentence of rules.
 
 - **`tdd-workflow`** — codifies the researcher → test-author → implementer sequence and routes work through subagents. References cover per-language test naming and BDD spec style.
 - **`canonical-research`** — codifies the official-docs-first rule and the citation format (URL + verbatim quote) for every external claim.
@@ -104,6 +104,7 @@ The scaffold ships thirteen, listed below. The pattern: a skill exists when ther
 - **`clarify-spec`** — scans a task list for underspecification, contradictions, and implicit dependencies. Returns structured questions (not answers) for the user to resolve interactively.
 - **`implement-plan`** — validates the task graph (DAG, no missing dependencies, all routing fields resolved) and produces a per-task routing decision before any code is written.
 - **`project-constitution`** — interactive, LLM-assisted authoring of `.forge/constitution.md`. Scans the repo for signals, drafts all six required sections (Purpose, Non-negotiables, Architectural principles, Risk posture, Team conventions, Out of scope), and walks the user through accepting, editing, or skipping each before writing.
+- **`research-topic`** — five-phase feasibility research workflow: topic intake, codebase scan, option enumeration via official docs, analysis (feasibility/complexity/risk/codebase-fit), and structured document assembly. Composes `canonical-research` for all external sourcing. Output is a durable `research.md` artifact in `.forge/NNN-slug/`.
 
 Notice what's not a skill: things that should always apply (those are in `CLAUDE.md`), things that need their own context window (those are subagents), and things that need deterministic enforcement (those are hooks).
 
@@ -336,7 +337,7 @@ This is the only sustainable shape: docs and code are linked by a checked-in ind
 
 ## The slash commands
 
-Fourteen commands tie the workflows together. Each is just a markdown file in `.claude/commands/` ([Slash commands](https://docs.claude.com/en/docs/claude-code/slash-commands)). Anthropic merged the older `.claude/commands/` system into skills — both still work, and the scaffold uses slash commands for high-leverage workflows that should appear in the `/` menu, and skills for the lower-level rules.
+Fifteen commands tie the workflows together. Each is just a markdown file in `.claude/commands/` ([Slash commands](https://docs.claude.com/en/docs/claude-code/slash-commands)). Anthropic merged the older `.claude/commands/` system into skills — both still work, and the scaffold uses slash commands for high-leverage workflows that should appear in the `/` menu, and skills for the lower-level rules.
 
 | Command | What it does |
 |---|---|
@@ -353,9 +354,10 @@ Fourteen commands tie the workflows together. Each is just a markdown file in `.
 | `/forge.tasks <spec>` | Decomposes a feature spec into a numbered, dependency-ordered task list in `.forge/NNN-slug/tasks.md`. Presents an end-of-step menu. |
 | `/forge.clarify [NNN]` | Surfaces spec ambiguities via one AskUserQuestion per ambiguity; writes `.forge/NNN-slug/clarifications.md`. |
 | `/forge.implement [NNN]` | Validates the task graph, executes all tasks in an isolated git worktree, presents end-of-run AskUserQuestion menu. |
+| `/forge.research <topic>` | Researcher subagent produces a structured feasibility brief: official-doc citations, codebase findings, options comparison, recommendation. Writes `.forge/NNN-slug/research.md`. |
 | `/forge.constitution` | Interactive authoring of `.forge/constitution.md` — create, update a section, or regenerate from scratch. |
 
-The first four are single-purpose utilities. The knowledge-base commands (`/ask`, `/stats`, `/survey`, `/audit`) route to the `codebase-oracle` and its skills. The last four form the feature pipeline: `/constitution` (one-time setup) → `/tasks` → `/clarify` → `/implement`.
+The first four are single-purpose utilities. The knowledge-base commands (`/ask`, `/stats`, `/survey`, `/audit`) route to the `codebase-oracle` and its skills. The last five form the feature pipeline: `/constitution` (one-time setup) → `/research` (optional feasibility) → `/tasks` → `/clarify` → `/implement`.
 
 ---
 
