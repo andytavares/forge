@@ -1,0 +1,1 @@
+Update all documentation to reflect the final v0.2.0 state after features 001 (project constitution, UX overhaul) and 002 (file-level installer ownership). Ensure README.md, forge-blog.md, and doc-index.json are accurate and complete.
