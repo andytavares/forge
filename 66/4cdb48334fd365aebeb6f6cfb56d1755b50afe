@@ -1,0 +1,31 @@
+README.md
+  s_771d57146adca7::t_1ed9c6aadb6121 164
+  s_771d57146adca7::t_cef1c7f6ff440a 20
+forge-blog.md
+  s_771d57146adca7::t_fc3a07cb10cbed 339,343-358
+  s_771d57146adca7::t_f4d75bf19352fa 92,100-102
+  s_771d57146adca7::t_dfb01a41f45319 146
+  s_771d57146adca7::t_88a378f9d239b4 561-563
+  s_771d57146adca7::t_b8a86744cbb63c 544-547,549
+  s_771d57146adca7::t_07a78e7cb44508 534
+  s_771d57146adca7::t_c5583093a8e465 572
+.claude/doc-index.json
+  s_771d57146adca7::t_61b3b3d1f3d2e2 19
+  s_771d57146adca7::t_ac6bb793ca23ed 38,54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "664cdb48334fd365aebeb6f6cfb56d1755b50afe",
+  "prompts": {},
+  "sessions": {
+    "s_771d57146adca7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9c91daa3-75e0-4525-9f89-2497204c3d15",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Andrew <andrew.tavaes87@gmail.com>"
+    }
+  }
+}
