@@ -1,0 +1,36 @@
+.claude/doc-index.json
+  s_a172ac93d67062::t_7b6ad21ca4dc36 7
+  s_a172ac93d67062::t_9f38648b4717f3 38
+  s_a172ac93d67062::t_e980b613505b58 146-169
+.claude/skills/research-topic/SKILL.md
+  s_a172ac93d67062::t_3190982566c81d 1-82
+.claude/commands/forge.research.md
+  s_a172ac93d67062::t_46a8b7fb10b86e 1-23
+README.md
+  s_a172ac93d67062::t_3fca5525201c93 11-12
+forge-blog.md
+  s_a172ac93d67062::t_b9d0dd4d633069 107
+  s_a172ac93d67062::t_d5d3f8728a1f1e 340
+  s_a172ac93d67062::t_4cfc95cff4ba27 357,360
+  s_a172ac93d67062::t_a9160a252af4d0 92
+scripts/forge.sh
+  s_a172ac93d67062::t_93ef46f159d19d 13
+.claude/skills/research-topic/references/research-doc-schema.md
+  s_a172ac93d67062::t_73fc8b7c9e406a 1-81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "3f180203d43be2cf924dd6462bef392760e7f781",
+  "prompts": {},
+  "sessions": {
+    "s_a172ac93d67062": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7952b4ca-e8a5-4ac8-93b7-c593764f6214",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Andrew <andrew.tavaes87@gmail.com>"
+    }
+  }
+}
