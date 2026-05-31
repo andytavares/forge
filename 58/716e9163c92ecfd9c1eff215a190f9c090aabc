@@ -1,0 +1,21 @@
+.claude/doc-index.json
+  s_c03a1b29967a74::t_9852c5182f6f66 150
+  s_c03a1b29967a74::t_778649e2538ff0 32
+  s_c03a1b29967a74::t_861b979626e734 137
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "58716e9163c92ecfd9c1eff215a190f9c090aabc",
+  "prompts": {},
+  "sessions": {
+    "s_c03a1b29967a74": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "75fca78b-cbcb-4eef-9997-15f47ae667ce",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Andrew <andrew.tavaes87@gmail.com>"
+    }
+  }
+}
