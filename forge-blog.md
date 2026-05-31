@@ -89,7 +89,7 @@ That's progressive disclosure. The keep-`SKILL.md`-under-500-lines guideline fro
 
 ### What I put in skills (and why each one earns its keep)
 
-The scaffold ships ten, listed below. The pattern: a skill exists when there's a repeatable decision Claude must make that needs more than a sentence of rules.
+The scaffold ships thirteen, listed below. The pattern: a skill exists when there's a repeatable decision Claude must make that needs more than a sentence of rules.
 
 - **`tdd-workflow`** — codifies the researcher → test-author → implementer sequence and routes work through subagents. References cover per-language test naming and BDD spec style.
 - **`canonical-research`** — codifies the official-docs-first rule and the citation format (URL + verbatim quote) for every external claim.
@@ -97,6 +97,9 @@ The scaffold ships ten, listed below. The pattern: a skill exists when there's a
 - **`repo-conventions`** — read 2-3 analogous files before creating a new one. Mirror their naming, error style, import order, and test placement.
 - **`code-review`** — structured rubric for reviewing diffs (security, perf, conventions, coverage, docs).
 - **`doc-sync`** — the rules the `doc-keeper` subagent follows when updating markdown.
+- **`codebase-stats`** — answers quantitative questions about the repo (line counts by language, test ratio, contributor breakdown, churn) using `scc`, `tokei`, or `cloc`.
+- **`pattern-survey`** — finds every implementation of a concern (auth, retries, logging, etc.) across the codebase, clusters by approach, identifies the dominant pattern and outliers, and recommends convergence.
+- **`build-audit`** — diagnoses build/test/tooling problems by collecting data points, cross-referencing official docs, and ranking hypotheses by confidence × impact.
 - **`task-decomposition`** — converts a feature spec into a dependency-ordered task list with routing metadata. Each task is ≤ 200 lines of change and has explicit acceptance criteria.
 - **`clarify-spec`** — scans a task list for underspecification, contradictions, and implicit dependencies. Returns structured questions (not answers) for the user to resolve interactively.
 - **`implement-plan`** — validates the task graph (DAG, no missing dependencies, all routing fields resolved) and produces a per-task routing decision before any code is written.
@@ -140,7 +143,7 @@ Three reasons:
 
 ![TDD loop with three subagents](diagrams/03-tdd-flow.svg)
 
-`/tdd <task>` runs all three in sequence, pausing for human approval between stages. The plan is reviewed before tests are written. The tests are reviewed before implementation. The implementation is reviewed by `code-reviewer` before the change is reported done.
+`/tdd <task>` runs all three in sequence as a single pipeline. The researcher produces a plan, `test-author` writes failing tests and confirms they fail, `implementer` makes them pass, and `code-reviewer` reviews the diff — all without mid-flow interruptions. The result is returned as a completed task summary.
 
 This mirrors what Anthropic's Security Engineering team described: their workflow went from "design doc → janky code → refactor → give up on tests" to "ask Claude for pseudocode, guide it through test-driven development, check in periodically" ([How Anthropic teams use Claude Code](https://www.anthropic.com/news/how-anthropic-teams-use-claude-code)).
 
@@ -333,22 +336,26 @@ This is the only sustainable shape: docs and code are linked by a checked-in ind
 
 ## The slash commands
 
-Nine commands tie the workflows together. Each is just a markdown file in `.claude/commands/` ([Slash commands](https://docs.claude.com/en/docs/claude-code/slash-commands)). Anthropic merged the older `.claude/commands/` system into skills — both still work, and the scaffold uses slash commands for high-leverage workflows that should appear in the `/` menu, and skills for the lower-level rules.
+Fourteen commands tie the workflows together. Each is just a markdown file in `.claude/commands/` ([Slash commands](https://docs.claude.com/en/docs/claude-code/slash-commands)). Anthropic merged the older `.claude/commands/` system into skills — both still work, and the scaffold uses slash commands for high-leverage workflows that should appear in the `/` menu, and skills for the lower-level rules.
 
 | Command | What it does |
 |---|---|
-| `/detect-stack` | Runs `build-detective`, writes `.claude/stack.json`, prints summary. |
-| `/plan <task>` | Researcher subagent produces a written plan. No code. |
-| `/tdd <task>` | Researcher → test-author → implementer → code-reviewer, runs as a single pipeline. |
-| `/review` | Code-reviewer subagent against `git diff HEAD`. |
-| `/docs-sync` | Doc-keeper subagent runs a full markdown refresh. |
-| `/find-reuse <task>` | Returns up to 5 ranked prior-art candidates. |
-| `/tasks <spec>` | Decomposes a feature spec into a numbered, dependency-ordered task list in `.forge/NNN-slug/tasks.md`. |
-| `/clarify [NNN]` | Surfaces spec ambiguities, collects all answers, and writes resolved answers to `.forge/NNN-slug/clarifications.md`. |
-| `/implement [NNN]` | Validates the task graph, produces a routing plan, executes tasks in an isolated git worktree, and presents an end-of-run AskUserQuestion menu. |
-| `/constitution` | Interactive authoring of `.forge/constitution.md` — create, update a section, or regenerate from scratch. |
+| `/forge.detect-stack` | Runs `build-detective`, writes `.claude/stack.json`, prints summary. |
+| `/forge.plan <task>` | Researcher subagent produces a written plan. No code. |
+| `/forge.tdd <task>` | Researcher → test-author → implementer → code-reviewer, runs as a single pipeline. |
+| `/forge.review` | Code-reviewer subagent against `git diff HEAD`. |
+| `/forge.docs-sync` | Doc-keeper subagent runs a full markdown refresh. |
+| `/forge.find-reuse <task>` | Returns up to 5 ranked prior-art candidates. |
+| `/forge.ask <question>` | Routes to `codebase-oracle`; answers any question about the codebase. |
+| `/forge.stats` | Quantitative repo summary — lines by language, test ratio, top contributors. |
+| `/forge.survey <topic>` | Pattern survey for a cross-cutting concern (auth, retries, logging, etc.). |
+| `/forge.audit <symptom>` | Diagnoses a build/test/tooling problem; ranks hypotheses by confidence × impact. |
+| `/forge.tasks <spec>` | Decomposes a feature spec into a numbered, dependency-ordered task list in `.forge/NNN-slug/tasks.md`. Presents an end-of-step menu. |
+| `/forge.clarify [NNN]` | Surfaces spec ambiguities via one AskUserQuestion per ambiguity; writes `.forge/NNN-slug/clarifications.md`. |
+| `/forge.implement [NNN]` | Validates the task graph, executes all tasks in an isolated git worktree, presents end-of-run AskUserQuestion menu. |
+| `/forge.constitution` | Interactive authoring of `.forge/constitution.md` — create, update a section, or regenerate from scratch. |
 
-The first six are single-purpose utilities. The last four form a pipeline: `/constitution` (one-time setup) → `/tasks` → `/clarify` → `/implement`. Each does one thing; the pipeline is what the composition produces.
+The first four are single-purpose utilities. The knowledge-base commands (`/ask`, `/stats`, `/survey`, `/audit`) route to the `codebase-oracle` and its skills. The last four form the feature pipeline: `/constitution` (one-time setup) → `/tasks` → `/clarify` → `/implement`.
 
 ---
 
@@ -524,7 +531,7 @@ What it does:
 - Copies the managed paths: `.claude/agents/`, `.claude/skills/`, `.claude/commands/`, `.claude/hooks/`, `.claude/settings.json`, `.claude-plugin/plugin.json`, `.mcp.json`, and the two scripts.
 - Creates `CLAUDE.md` from the template **only if it doesn't already exist** — your existing `CLAUDE.md` is never touched.
 - Runs `detect-stack.sh` to populate `.claude/stack.json`.
-- Writes `.Forge-manifest.json` recording the version, source, and timestamp.
+- Writes `.forge-manifest.json` recording the version, source, and timestamp.
 
 ### Update
 
@@ -534,12 +541,12 @@ What it does:
 ```
 
 What it does:
-- Snapshots every managed file to `.Forge-backups/<timestamp>/` **before** making any changes.
-- Shows a diff summary of which managed paths will change.
-- Rsyncs new versions with `--delete` so files removed in the new release are removed in the target.
-- **Never touches** `CLAUDE.md`, `.claude/doc-index.json`, or `.claude/stack.json` — those are yours.
+- Snapshots every forge-owned file (from the manifest) to `.forge-backups/<timestamp>/` **before** making any changes.
+- Shows a diff summary of which forge-owned files will change.
+- Copies updated forge files; removes files that were forge-owned in the previous version but are absent from the new source. **Never touches files you created** in `.claude/skills/`, `.claude/commands/`, `.claude/hooks/`, or `.claude/agents/`.
+- **Never touches** `CLAUDE.md`, `.claude/doc-index.json`, `.claude/stack.json`, `.forge/constitution.md`, or any file not listed in the manifest.
 - If `.mcp.json` has local edits, writes the new version as `.mcp.json.new` and warns you to merge.
-- Updates the manifest.
+- Updates the manifest with the new file list, version, and timestamp.
 
 You can always roll back: `./scripts/forge.sh restore /path/to/repo <backup-dir>`.
 
@@ -551,9 +558,9 @@ You can always roll back: `./scripts/forge.sh restore /path/to/repo <backup-dir>
 ```
 
 What it does:
-- Takes one final backup.
-- Removes only the managed paths.
-- Preserves `CLAUDE.md`, the doc index, the stack file, and the backups directory.
+- Takes one final backup of all forge-owned files (from the manifest).
+- Removes only the files listed in the manifest — your files in `.claude/skills/`, `.claude/commands/`, `.claude/hooks/`, and `.claude/agents/` are untouched. Shared directories are only removed if they are empty after forge files are deleted.
+- Preserves `CLAUDE.md`, the doc index, the stack file, `.forge/constitution.md`, and the backups directory.
 - Removes the manifest.
 
 ### Status
@@ -562,7 +569,7 @@ What it does:
 ./scripts/forge.sh status /path/to/repo
 ```
 
-Prints the manifest and lists every managed path with a present/missing indicator. Useful for verifying an install or for CI checks.
+Prints the manifest (version, source, install date), lists every forge-owned file with a present/missing indicator, and separately lists any files you've created in the shared directories that Forge doesn't manage. Useful for verifying an install or auditing what's yours vs. what's Forge's.
 
 ### The flow for releasing updates to your team
 
