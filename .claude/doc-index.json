@@ -16,7 +16,7 @@
         ".claude/commands/",
         ".claude/hooks/"
       ],
-      "last_verified_commit": "08c97d7",
+      "last_verified_commit": "6b0fa8f",
       "staleness_score": 0
     },
     {
@@ -35,7 +35,7 @@
     {
       "path": "forge-blog.md",
       "title": "Building a Claude Harness — design rationale",
-      "summary": "Long-form write-up of the harness design: CLAUDE.md + project constitution, 10 skills, subagents, 6 hooks (including post-compact), MCP, settings.",
+      "summary": "Long-form write-up of the harness design: CLAUDE.md + project constitution, 13 skills, subagents, 6 hooks (including post-compact), MCP, settings, and file-level installer ownership.",
       "owners": [],
       "referenced_code_paths": [
         "scripts/forge.sh",
@@ -51,7 +51,7 @@
         ".claude/agents/",
         ".claude/commands/"
       ],
-      "last_verified_commit": "08c97d7",
+      "last_verified_commit": "6b0fa8f",
       "staleness_score": 0
     },
     {

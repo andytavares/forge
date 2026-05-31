@@ -17,7 +17,7 @@ A cookiecutter Claude Code harness for large multi-language codebases. Drop it i
 
 ## Prerequisites
 
-The installer needs: `bash`, `git`, `jq`, `find`, `rsync`. Most Linux/macOS systems have all of these; `jq` and `rsync` may need a `brew install` or `apt install`.
+The installer needs: `bash`, `git`, `jq`, `find`. Most Linux/macOS systems have all of these; `jq` may need a `brew install` or `apt install`.
 
 Claude Code itself: install per [the official quickstart](https://docs.claude.com/en/docs/claude-code/setup).
 
@@ -161,7 +161,7 @@ Three slash commands provide a structured, spec-to-code pipeline for larger feat
 
 What each command does:
 
-- **`/forge.tasks <spec>`** — runs the `researcher` subagent against the spec, then the `task-decomposition` skill to generate a structured, dependency-ordered task list. Writes it to `.forge/NNN-slug/tasks.md` after your approval.
+- **`/forge.tasks <spec>`** — runs the `researcher` subagent against the spec, then the `task-decomposition` skill to generate a structured, dependency-ordered task list. Writes it to `.forge/NNN-slug/tasks.md` and presents an end-of-step menu (accept / edit / regenerate).
 - **`/forge.clarify [NNN]`** — runs the `clarify-spec` skill to find every place a downstream implementer would face an arbitrary choice. Collects all ambiguities and records your answers in `.forge/NNN-slug/clarifications.md`.
 - **`/forge.implement [NNN]`** — runs the `implement-plan` skill to validate the task graph, resolves routing (TDD vs. implementer-direct, doc-sync needed), then executes tasks in order in a git worktree at `.worktrees/NNN-slug/`. Presents an end-of-run menu for review, open-PR, or follow-up actions. Full `code-reviewer` pass at the end.
 
