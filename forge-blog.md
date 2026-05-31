@@ -55,11 +55,21 @@ What does **not** belong in `CLAUDE.md`:
 - Setup instructions for humans. Those belong in a `README.md`.
 - Project lore, history, or anything decorative.
 
-The harness's root `CLAUDE.md` in this scaffold is ~50 lines. It states the four things that matter: always run `/detect-stack`, always run `find-reuse` before new code, TDD by default, canonical sources only.
+The harness's root `CLAUDE.md` in this scaffold is ~60 lines. It states the five things that matter: always run `/detect-stack`, always run `find-reuse` before new code, TDD by default, canonical sources only, and treat the `=== project-constitution ===` block as top-level non-negotiables that override any conflicting instruction (or warn the user if no constitution is loaded).
 
 ### A note on `@file` imports
 
 CLAUDE.md supports `@path` imports for organization. Imported content **still loads at session start** ([Memory](https://docs.anthropic.com/en/docs/claude-code/memory)) — it does not reduce context. Use it to keep the file readable for humans, not to "hide" expensive content. If you want on-demand loading, use a skill.
+
+### The project constitution: CLAUDE.md's companion
+
+`CLAUDE.md` is for org-wide rules that apply to every repo. The project constitution (`.forge/constitution.md`) is for project-specific identity — purpose, non-negotiables, architecture decisions, risk posture, team conventions, and out-of-scope items. It is authored interactively via `/forge.constitution`, which runs the `project-constitution` skill: the `researcher` subagent scans the repo for implicit principles, then walks you through each section one at a time.
+
+Once created, the constitution is injected in two ways:
+- **`session-start.sh`** wraps it in `=== project-constitution ===` / `=== end project-constitution ===` delimiters so Claude sees it at the top of every session.
+- **`post-compact.sh`** (`PostCompact` hook) reinjects it as `additionalContext` after context compaction, so the non-negotiables survive context window resets.
+
+Both paths enforce a 2000-character limit and warn if the file exceeds it. `CLAUDE.md` instructs Claude to treat the delimited block as top-level non-negotiables that override any conflicting instruction in the session.
 
 ---
 
@@ -79,7 +89,7 @@ That's progressive disclosure. The keep-`SKILL.md`-under-500-lines guideline fro
 
 ### What I put in skills (and why each one earns its keep)
 
-The scaffold ships nine, listed below. The pattern: a skill exists when there's a repeatable decision Claude must make that needs more than a sentence of rules.
+The scaffold ships ten, listed below. The pattern: a skill exists when there's a repeatable decision Claude must make that needs more than a sentence of rules.
 
 - **`tdd-workflow`** — codifies the researcher → test-author → implementer sequence and routes work through subagents. References cover per-language test naming and BDD spec style.
 - **`canonical-research`** — codifies the official-docs-first rule and the citation format (URL + verbatim quote) for every external claim.
@@ -90,6 +100,7 @@ The scaffold ships nine, listed below. The pattern: a skill exists when there's 
 - **`task-decomposition`** — converts a feature spec into a dependency-ordered task list with routing metadata. Each task is ≤ 200 lines of change and has explicit acceptance criteria.
 - **`clarify-spec`** — scans a task list for underspecification, contradictions, and implicit dependencies. Returns structured questions (not answers) for the user to resolve interactively.
 - **`implement-plan`** — validates the task graph (DAG, no missing dependencies, all routing fields resolved) and produces a per-task routing decision before any code is written.
+- **`project-constitution`** — interactive, LLM-assisted authoring of `.forge/constitution.md`. Scans the repo for signals, drafts all six required sections (Purpose, Non-negotiables, Architectural principles, Risk posture, Team conventions, Out of scope), and walks the user through accepting, editing, or skipping each before writing.
 
 Notice what's not a skill: things that should always apply (those are in `CLAUDE.md`), things that need their own context window (those are subagents), and things that need deterministic enforcement (those are hooks).
 
@@ -149,13 +160,14 @@ A hook is a shell command, HTTP endpoint, or prompt that fires at a lifecycle ev
 
 `PreToolUse` is the powerful one. It can return JSON containing `decision: "block"` and a `reason` string, and Claude has to take that feedback into account ([Hooks reference](https://docs.claude.com/en/docs/claude-code/hooks)). That's the enforcement primitive.
 
-### The five hooks in the scaffold
+### The six hooks in the scaffold
 
-1. **`session-start.sh`** — prints repo HEAD, branch, detected stack, uncommitted file count, and doc-staleness count. stdout is added to Claude's context ([Hooks reference](https://docs.claude.com/en/docs/claude-code/hooks)).
-2. **`prompt-augment.sh`** — `UserPromptSubmit` hook. Scans for intent verbs ("add", "implement", "create") and appends a reminder to run `find-reuse` first.
-3. **`pre-edit-guard.sh`** — `PreToolUse` on `Edit`/`Write`. Enforces TDD **only in packages that already have tests**. If the package directory contains zero test files, the hook logs a warning to stderr and lets the edit through — backfilling coverage is a separate decision, not something this hook should force on legacy code. In tested packages it returns `decision: "block"` with a message routing Claude to `test-author` first.
-4. **`post-edit-format.sh`** — `PostToolUse` on `Edit`/`Write`. Runs the formatter declared in `stack.json`. Same script humans run locally and CI runs.
-5. **`post-edit-doc-mark.sh`** — `PostToolUse` on `Edit`/`Write`. Bumps `staleness_score` in `doc-index.json` for any markdown that references the edited path.
+1. **`session-start.sh`** — prints repo HEAD, branch, detected stack, uncommitted file count, and doc-staleness count. Also injects `.forge/constitution.md` between `=== project-constitution ===` and `=== end project-constitution ===` delimiters if the file exists and is under 2000 characters. stdout is added to Claude's context ([Hooks reference](https://docs.claude.com/en/docs/claude-code/hooks)).
+2. **`post-compact.sh`** — `PostCompact` hook. Reinjects `.forge/constitution.md` as `additionalContext` after context compaction, using the same 2000-character guard. Ensures the project constitution survives context window resets without manual intervention.
+3. **`prompt-augment.sh`** — `UserPromptSubmit` hook. Scans for intent verbs ("add", "implement", "create") and appends a reminder to run `find-reuse` first.
+4. **`pre-edit-guard.sh`** — `PreToolUse` on `Edit`/`Write`. Enforces TDD **only in packages that already have tests**. If the package directory contains zero test files, the hook logs a warning to stderr and lets the edit through — backfilling coverage is a separate decision, not something this hook should force on legacy code. In tested packages it returns `decision: "block"` with a message routing Claude to `test-author` first.
+5. **`post-edit-format.sh`** — `PostToolUse` on `Edit`/`Write`. Runs the formatter declared in `stack.json`. Same script humans run locally and CI runs.
+6. **`post-edit-doc-mark.sh`** — `PostToolUse` on `Edit`/`Write`. Bumps `staleness_score` in `doc-index.json` for any markdown that references the edited path.
 
 The hooks all live in `.claude/hooks/`, all start with `#!/usr/bin/env bash`, all read tool input JSON from stdin, and emit either nothing (exit 0 → proceed) or a small JSON object on stdout. That's the entire contract.
 
@@ -327,15 +339,16 @@ Nine commands tie the workflows together. Each is just a markdown file in `.clau
 |---|---|
 | `/detect-stack` | Runs `build-detective`, writes `.claude/stack.json`, prints summary. |
 | `/plan <task>` | Researcher subagent produces a written plan. No code. |
-| `/tdd <task>` | Researcher → test-author → implementer → code-reviewer, with pauses. |
+| `/tdd <task>` | Researcher → test-author → implementer → code-reviewer, runs as a single pipeline. |
 | `/review` | Code-reviewer subagent against `git diff HEAD`. |
 | `/docs-sync` | Doc-keeper subagent runs a full markdown refresh. |
 | `/find-reuse <task>` | Returns up to 5 ranked prior-art candidates. |
 | `/tasks <spec>` | Decomposes a feature spec into a numbered, dependency-ordered task list in `.forge/NNN-slug/tasks.md`. |
-| `/clarify [NNN]` | Surfaces spec ambiguities one at a time and writes resolved answers to `.forge/NNN-slug/clarifications.md`. |
-| `/implement [NNN]` | Validates the task graph, produces a routing plan, then executes tasks in an isolated git worktree with per-task pauses. |
+| `/clarify [NNN]` | Surfaces spec ambiguities, collects all answers, and writes resolved answers to `.forge/NNN-slug/clarifications.md`. |
+| `/implement [NNN]` | Validates the task graph, produces a routing plan, executes tasks in an isolated git worktree, and presents an end-of-run AskUserQuestion menu. |
+| `/constitution` | Interactive authoring of `.forge/constitution.md` — create, update a section, or regenerate from scratch. |
 
-The first six are single-purpose utilities. The last three form a pipeline: `/tasks` → `/clarify` → `/implement`. Each does one thing; the pipeline is what the composition produces.
+The first six are single-purpose utilities. The last four form a pipeline: `/constitution` (one-time setup) → `/tasks` → `/clarify` → `/implement`. Each does one thing; the pipeline is what the composition produces.
 
 ---
 
@@ -406,7 +419,7 @@ This is the right shape for "cookie cutter that any team can adopt": one command
 
 A walkthrough of `claude "fix the bug where /users/:id returns 500 when id is non-numeric"` in a repo with the harness installed:
 
-1. **SessionStart hook** prints repo HEAD, branch, detected stack, dirty file count, stale-doc count. Claude knows it's looking at a Go service with `make test`.
+1. **SessionStart hook** prints repo HEAD, branch, detected stack, dirty file count, stale-doc count, and injects `.forge/constitution.md` (if present) between `=== project-constitution ===` delimiters. Claude knows it's looking at a Go service with `make test` and sees the project's non-negotiables immediately.
 2. **CLAUDE.md** is read: TDD by default, find-reuse first, canonical sources only.
 3. **UserPromptSubmit hook** sees no creation intent verbs, so it doesn't inject the find-reuse reminder.
 4. The model spawns `researcher`. The researcher greps for `/users/:id`, reads the handler and its tests, hits `pkg.go.dev` (allowlisted) for the relevant routing library behavior. Returns: "input is parsed via `strconv.Atoi` without error handling; tests cover only the success path; suggested acceptance criteria: return 400 with structured error when id is non-numeric, log a warn, do not call DB."
@@ -553,7 +566,7 @@ Prints the manifest and lists every managed path with a present/missing indicato
 
 ### The flow for releasing updates to your team
 
-1. Maintain the scaffold in its own git repo (e.g., `your-org/Forge`).
+1. Maintain the scaffold in its own git repo (e.g., `your-org/Forge`). The current release is v0.2.0.
 2. Tag releases with semver. Bump `VERSION="..."` in `scripts/forge.sh` to match.
 3. Engineers in target repos pull the new scaffold and run `forge.sh update <their-repo>`.
 4. Backup snapshots make every update reversible.

@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "docs": [
+  "entries": [
     {
       "path": "README.md",
       "title": "Forge — Claude Code harness",
-      "summary": "Installation, update, uninstall, and feature overview for the Forge Claude Code scaffold.",
+      "summary": "Installation, update, uninstall, and feature overview for the Forge Claude Code scaffold (v0.2.0). Covers project constitution, all 14 slash commands, 6 hooks, and 13 skills.",
       "owners": [],
       "referenced_code_paths": [
         "scripts/forge.sh",
@@ -16,31 +16,33 @@
         ".claude/commands/",
         ".claude/hooks/"
       ],
-      "last_verified_commit": "14dffe4",
+      "last_verified_commit": "08c97d7",
       "staleness_score": 0
     },
     {
       "path": "CLAUDE.md",
       "title": "Working Agreement for Claude",
-      "summary": "Persistent session rules loaded into every Claude Code conversation: detect-stack, find-reuse, TDD, canonical-sources-first.",
+      "summary": "Persistent session rules loaded into every Claude Code conversation: detect-stack, find-reuse, TDD, canonical-sources-first, and project-constitution non-negotiables.",
       "owners": [],
       "referenced_code_paths": [
         ".claude/stack.json",
-        ".claude/doc-index.json"
+        ".claude/doc-index.json",
+        ".forge/constitution.md"
       ],
-      "last_verified_commit": "14dffe4",
+      "last_verified_commit": "08c97d7",
       "staleness_score": 0
     },
     {
       "path": "forge-blog.md",
       "title": "Building a Claude Harness — design rationale",
-      "summary": "Long-form write-up of the six-layer harness design: CLAUDE.md, skills, subagents, hooks, MCP, settings.",
+      "summary": "Long-form write-up of the harness design: CLAUDE.md + project constitution, 10 skills, subagents, 6 hooks (including post-compact), MCP, settings.",
       "owners": [],
       "referenced_code_paths": [
         "scripts/forge.sh",
         "scripts/detect-stack.sh",
         ".claude/settings.json",
         ".claude/hooks/session-start.sh",
+        ".claude/hooks/post-compact.sh",
         ".claude/hooks/prompt-augment.sh",
         ".claude/hooks/pre-edit-guard.sh",
         ".claude/hooks/post-edit-format.sh",
@@ -49,41 +51,41 @@
         ".claude/agents/",
         ".claude/commands/"
       ],
-      "last_verified_commit": "14dffe4",
+      "last_verified_commit": "08c97d7",
       "staleness_score": 0
     },
     {
       "path": ".claude/commands/forge.tasks.md",
       "title": "/forge.tasks — decompose a spec into a task list",
-      "summary": "Slash command: runs task-decomposition skill to produce .forge/NNN-slug/tasks.md.",
+      "summary": "Slash command: runs task-decomposition skill to produce .forge/NNN-slug/tasks.md. End-of-step AskUserQuestion menu.",
       "owners": [],
       "referenced_code_paths": [
         ".claude/skills/task-decomposition/SKILL.md"
       ],
-      "last_verified_commit": "14dffe4",
+      "last_verified_commit": "08c97d7",
       "staleness_score": 0
     },
     {
       "path": ".claude/commands/forge.clarify.md",
       "title": "/forge.clarify — resolve spec ambiguities interactively",
-      "summary": "Slash command: runs clarify-spec skill and writes .forge/NNN-slug/clarifications.md.",
+      "summary": "Slash command: runs clarify-spec skill, collects all ambiguities at once via AskUserQuestion, and writes .forge/NNN-slug/clarifications.md.",
       "owners": [],
       "referenced_code_paths": [
         ".claude/skills/clarify-spec/SKILL.md"
       ],
-      "last_verified_commit": "14dffe4",
+      "last_verified_commit": "08c97d7",
       "staleness_score": 0
     },
     {
       "path": ".claude/commands/forge.implement.md",
       "title": "/forge.implement — execute a task list in a worktree",
-      "summary": "Slash command: runs implement-plan skill, creates a git worktree, and executes tasks with per-task pauses.",
+      "summary": "Slash command: runs implement-plan skill, creates a git worktree, executes tasks as a single pipeline, presents end-of-run AskUserQuestion menu.",
       "owners": [],
       "referenced_code_paths": [
         ".claude/skills/implement-plan/SKILL.md",
         ".claude/skills/task-decomposition/SKILL.md"
       ],
-      "last_verified_commit": "14dffe4",
+      "last_verified_commit": "08c97d7",
       "staleness_score": 0
     },
     {
@@ -118,6 +120,28 @@
         ".claude/hooks/pre-edit-guard.sh"
       ],
       "last_verified_commit": "14dffe4",
+      "staleness_score": 0
+    },
+    {
+      "path": ".claude/commands/forge.constitution.md",
+      "title": "/forge.constitution — create and manage the project constitution",
+      "summary": "Slash command: interactive authoring of .forge/constitution.md, injected every session via session-start.sh and post-compact.sh.",
+      "owners": [],
+      "referenced_code_paths": [
+        ".claude/skills/project-constitution/SKILL.md",
+        ".claude/hooks/session-start.sh",
+        ".claude/hooks/post-compact.sh"
+      ],
+      "last_verified_commit": "08c97d7",
+      "staleness_score": 0
+    },
+    {
+      "path": ".forge/constitution.md",
+      "title": "Project constitution",
+      "summary": "Soul file: project purpose, non-negotiables, architectural principles, risk posture, team conventions, out-of-scope items. Loaded every session.",
+      "owners": [],
+      "referenced_code_paths": [],
+      "last_verified_commit": "08c97d7",
       "staleness_score": 0
     }
   ]
