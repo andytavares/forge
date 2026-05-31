@@ -1,0 +1,25 @@
+README.md
+  s_74a59ebf18ea00::t_3697ed8d0bc010 11-12
+  s_74a59ebf18ea00::t_8d1fb7237460b8 128-150
+.claude/doc-index.json
+  s_74a59ebf18ea00::t_65a42c4232585a 1-124
+forge-blog.md
+  s_74a59ebf18ea00::t_8cce19992b0106 82,90-92
+  s_74a59ebf18ea00::t_a4c1dade92db92 324,334-336,338
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "08c97d7728321697ba4dc6efc96ca2782a081d09",
+  "prompts": {},
+  "sessions": {
+    "s_74a59ebf18ea00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9ade9bc4-5b9c-416e-815c-45385430a696",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Andrew <andrew.tavaes87@gmail.com>"
+    }
+  }
+}
