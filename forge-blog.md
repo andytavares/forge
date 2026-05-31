@@ -79,7 +79,7 @@ That's progressive disclosure. The keep-`SKILL.md`-under-500-lines guideline fro
 
 ### What I put in skills (and why each one earns its keep)
 
-The scaffold ships six, listed below. The pattern: a skill exists when there's a repeatable decision Claude must make that needs more than a sentence of rules.
+The scaffold ships nine, listed below. The pattern: a skill exists when there's a repeatable decision Claude must make that needs more than a sentence of rules.
 
 - **`tdd-workflow`** — codifies the researcher → test-author → implementer sequence and routes work through subagents. References cover per-language test naming and BDD spec style.
 - **`canonical-research`** — codifies the official-docs-first rule and the citation format (URL + verbatim quote) for every external claim.
@@ -87,6 +87,9 @@ The scaffold ships six, listed below. The pattern: a skill exists when there's a
 - **`repo-conventions`** — read 2-3 analogous files before creating a new one. Mirror their naming, error style, import order, and test placement.
 - **`code-review`** — structured rubric for reviewing diffs (security, perf, conventions, coverage, docs).
 - **`doc-sync`** — the rules the `doc-keeper` subagent follows when updating markdown.
+- **`task-decomposition`** — converts a feature spec into a dependency-ordered task list with routing metadata. Each task is ≤ 200 lines of change and has explicit acceptance criteria.
+- **`clarify-spec`** — scans a task list for underspecification, contradictions, and implicit dependencies. Returns structured questions (not answers) for the user to resolve interactively.
+- **`implement-plan`** — validates the task graph (DAG, no missing dependencies, all routing fields resolved) and produces a per-task routing decision before any code is written.
 
 Notice what's not a skill: things that should always apply (those are in `CLAUDE.md`), things that need their own context window (those are subagents), and things that need deterministic enforcement (those are hooks).
 
@@ -318,7 +321,7 @@ This is the only sustainable shape: docs and code are linked by a checked-in ind
 
 ## The slash commands
 
-Six commands tie the workflows together. Each is just a markdown file in `.claude/commands/` ([Slash commands](https://docs.claude.com/en/docs/claude-code/slash-commands)). Anthropic merged the older `.claude/commands/` system into skills — both still work, and the scaffold uses slash commands for high-leverage workflows that should appear in the `/` menu, and skills for the lower-level rules.
+Nine commands tie the workflows together. Each is just a markdown file in `.claude/commands/` ([Slash commands](https://docs.claude.com/en/docs/claude-code/slash-commands)). Anthropic merged the older `.claude/commands/` system into skills — both still work, and the scaffold uses slash commands for high-leverage workflows that should appear in the `/` menu, and skills for the lower-level rules.
 
 | Command | What it does |
 |---|---|
@@ -328,8 +331,11 @@ Six commands tie the workflows together. Each is just a markdown file in `.claud
 | `/review` | Code-reviewer subagent against `git diff HEAD`. |
 | `/docs-sync` | Doc-keeper subagent runs a full markdown refresh. |
 | `/find-reuse <task>` | Returns up to 5 ranked prior-art candidates. |
+| `/tasks <spec>` | Decomposes a feature spec into a numbered, dependency-ordered task list in `.forge/NNN-slug/tasks.md`. |
+| `/clarify [NNN]` | Surfaces spec ambiguities one at a time and writes resolved answers to `.forge/NNN-slug/clarifications.md`. |
+| `/implement [NNN]` | Validates the task graph, produces a routing plan, then executes tasks in an isolated git worktree with per-task pauses. |
 
-These are intentionally small. Each does one thing.
+The first six are single-purpose utilities. The last three form a pipeline: `/tasks` → `/clarify` → `/implement`. Each does one thing; the pipeline is what the composition produces.
 
 ---
 

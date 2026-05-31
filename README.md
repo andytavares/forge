@@ -8,8 +8,8 @@ A cookiecutter Claude Code harness for large multi-language codebases. Drop it i
 - **`.claude/settings.json`** — sane allow/deny permission set + hook wiring.
 - **`.mcp.json`** — MCP server config (filesystem + git out of the box, examples for the rest).
 - **Seven subagents** — researcher, test-author, implementer, code-reviewer, doc-keeper, build-detective, codebase-oracle.
-- **Nine skills** — canonical-research, tdd-workflow, repo-conventions, find-reuse, code-review, doc-sync, codebase-stats, pattern-survey, build-audit.
-- **Ten slash commands** — `/forge.detect-stack`, `/forge.plan`, `/forge.tdd`, `/forge.review`, `/forge.docs-sync`, `/forge.find-reuse`, `/forge.ask`, `/forge.stats`, `/forge.survey`, `/forge.audit`.
+- **Twelve skills** — canonical-research, tdd-workflow, repo-conventions, find-reuse, code-review, doc-sync, codebase-stats, pattern-survey, build-audit, task-decomposition, clarify-spec, implement-plan.
+- **Thirteen slash commands** — `/forge.detect-stack`, `/forge.plan`, `/forge.tdd`, `/forge.review`, `/forge.docs-sync`, `/forge.find-reuse`, `/forge.ask`, `/forge.stats`, `/forge.survey`, `/forge.audit`, `/forge.tasks`, `/forge.clarify`, `/forge.implement`.
 - **Five hooks** — session-start, prompt-augment, pre-edit-guard (TDD, only enforced in tested packages), post-edit-format, post-edit-doc-mark.
 - **`detect-stack.sh`** — writes `.claude/stack.json` so Claude always uses your real build commands.
 - **`.claude-plugin/plugin.json`** — manifest so this can be distributed as a Claude Code plugin.
@@ -124,6 +124,29 @@ After install, do these three things:
    - `/forge.plan add a /healthz endpoint to the gateway` — verify the researcher produces a plan without writing code.
 
 If any of these fail, run `/forge.detect-stack` first; most issues stem from a missing or stale `stack.json`.
+
+## Feature workflow (tasks → clarify → implement)
+
+Three slash commands provide a structured, spec-to-code pipeline for larger features:
+
+```bash
+# 1. Decompose a feature spec into a numbered task list
+/forge.tasks "add rate limiting to the API gateway"
+
+# 2. Interactively resolve ambiguities in the task list
+/forge.clarify
+
+# 3. Execute the task list in an isolated worktree
+/forge.implement
+```
+
+What each command does:
+
+- **`/forge.tasks <spec>`** — runs the `researcher` subagent against the spec, then the `task-decomposition` skill to generate a structured, dependency-ordered task list. Writes it to `.forge/NNN-slug/tasks.md` after your approval.
+- **`/forge.clarify [NNN]`** — runs the `clarify-spec` skill to find every place a downstream implementer would face an arbitrary choice. Presents ambiguities one at a time and records your answers in `.forge/NNN-slug/clarifications.md`.
+- **`/forge.implement [NNN]`** — runs the `implement-plan` skill to validate the task graph, resolves routing (TDD vs. implementer-direct, doc-sync needed), then executes tasks in order in a git worktree at `.worktrees/NNN-slug/`. Each task pauses for approval before the next. Full `code-reviewer` pass at the end.
+
+The `.forge/` folder (spec, tasks, clarifications) is committed. The `.worktrees/` folder is gitignored — merge the feature branch when you're satisfied.
 
 ## Releasing updates to your team
 
