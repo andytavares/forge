@@ -29,7 +29,7 @@
         ".claude/doc-index.json",
         ".forge/constitution.md"
       ],
-      "last_verified_commit": "a422170",
+      "last_verified_commit": "bac0196",
       "staleness_score": 0
     },
     {
@@ -134,7 +134,7 @@
         ".claude/doc-index.json",
         "scripts/forge.sh"
       ],
-      "last_verified_commit": "524816b",
+      "last_verified_commit": "bac0196",
       "staleness_score": 0
     },
     {
@@ -147,7 +147,7 @@
         ".claude/doc-index.json",
         ".claude/settings.json"
       ],
-      "last_verified_commit": "524816b",
+      "last_verified_commit": "bac0196",
       "staleness_score": 0
     },
     {
