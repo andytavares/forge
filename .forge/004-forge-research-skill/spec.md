@@ -1,21 +1,21 @@
-# Spec: /forge.research Skill
+# Spec: /forge-research Skill
 
 ## Problem Statement
 
-The harness has no command for open-ended feasibility research. `/forge.plan` assumes you have a feature to plan. `/forge.ask` answers one-off questions. Neither produces a durable, options-comparison document grounded in official sources. `forge.research` fills that gap.
+The harness has no command for open-ended feasibility research. `/forge-plan` assumes you have a feature to plan. `/forge-ask` answers one-off questions. Neither produces a durable, options-comparison document grounded in official sources. `forge.research` fills that gap.
 
 ## New Files
 
 | File | Purpose |
 |---|---|
-| `.claude/commands/forge.research.md` | The slash command the user invokes |
+| `.claude/commands/forge-research.md` | The slash command the user invokes |
 | `.claude/skills/research-topic/SKILL.md` | The 5-phase workflow for the researcher subagent |
 | `.claude/skills/research-topic/references/research-doc-schema.md` | The output document schema |
 
 ## How It Works (Step-by-Step Flow)
 
 ```
-/forge.research <topic>
+/forge-research <topic>
   │
   ├─ 1. Counter-scan .forge/ → determine NNN; create .forge/NNN-slug/
   ├─ 2. Write topic.md (verbatim input)
@@ -27,7 +27,7 @@ The harness has no command for open-ended feasibility research. `/forge.plan` as
   │      Phase 5 — Assemble research.md using 9-section schema
   ├─ 4. Write output to .forge/NNN-slug/research.md
   └─ 5. AskUserQuestion menu:
-         • Accept → report path + suggest /forge.tasks NNN
+         • Accept → report path + suggest /forge-tasks NNN
          • Regenerate → overwrite research.md, re-run
          • Extend with more sources → additional topics/domains, re-run Phase 3–5
          • Abort → exit; folder kept
@@ -59,8 +59,8 @@ Every research document always contains:
 
 | File | Required Change |
 |---|---|
-| `README.md` | "Thirteen skills" → "Fourteen"; "Fourteen slash commands" → "Fifteen"; add `research-topic` and `/forge.research` to their respective lists |
-| `forge-blog.md` | "thirteen" → "fourteen" (skill count); "Fourteen commands" → "Fifteen"; add `research-topic` bullet; add `/forge.research` row to commands table |
+| `README.md` | "Thirteen skills" → "Fourteen"; "Fourteen slash commands" → "Fifteen"; add `research-topic` and `/forge-research` to their respective lists |
+| `forge-blog.md` | "thirteen" → "fourteen" (skill count); "Fourteen commands" → "Fifteen"; add `research-topic` bullet; add `/forge-research` row to commands table |
 | `.claude/doc-index.json` | Append two new entries (for the command and the skill) so `post-edit-doc-mark.sh` can track staleness |
 
 ## Risks
@@ -72,7 +72,7 @@ Every research document always contains:
 
 ## Acceptance Criteria
 
-1. `/forge.research <topic>` creates `.forge/NNN-slug/research.md` with all 9 sections present.
+1. `/forge-research <topic>` creates `.forge/NNN-slug/research.md` with all 9 sections present.
 2. Every external claim has a `Source: <Title> — <URL>` + `Quote: "<verbatim>"` line from first-party docs.
 3. Every codebase claim has a `file:line` citation.
 4. Recommendation names exactly one option and references at least one codebase finding.

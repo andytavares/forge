@@ -13,11 +13,11 @@ Research topic: $ARGUMENTS
 3. Write the subagent's output to `.forge/NNN-slug/research.md`.
 
 4. Present the completed document via AskUserQuestion:
-   - "Accept — research.md is saved. Next step: /forge.tasks NNN to convert to a task list."
+   - "Accept — research.md is saved. Next step: /forge-tasks NNN to convert to a task list."
    - "Regenerate — Discards this document and re-runs the researcher from scratch."
    - "Extend with more sources — Re-runs Phase 3–5 of the researcher with additional topics or source domains you specify."
    - "Abort — Exits. .forge/NNN-slug/ folder is kept for later."
 
    On "Regenerate": delete `research.md`, re-run step 2, re-present this menu.
    On "Extend with more sources": ask which additional topics or domains to include, re-run steps 2–3 with that context appended, re-present this menu.
-   On "Accept": report `Research NNN ready at .forge/NNN-slug/research.md. Run /forge.tasks NNN to convert to a task list.`
+   On "Accept": report `Research NNN ready at .forge/NNN-slug/research.md. Run /forge-tasks NNN to convert to a task list.`

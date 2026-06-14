@@ -9,7 +9,7 @@ A cookiecutter Claude Code harness for large multi-language codebases. Drop it i
 - **`.mcp.json`** — MCP server config (filesystem + git out of the box, examples for the rest).
 - **Six subagents** — researcher, test-author, code-reviewer, doc-keeper, build-detective, codebase-oracle.
 - **Twelve skills** — canonical-research, tdd-workflow, repo-conventions, find-reuse, ast-search, code-review, doc-sync, codebase-stats, pattern-survey, build-audit, project-constitution, research-topic.
-- **Thirteen slash commands** — `/forge.detect-stack`, `/forge.research`, `/forge.tdd`, `/forge.review`, `/forge.docs-sync`, `/forge.find-reuse`, `/forge.ast-search`, `/forge.ask`, `/forge.stats`, `/forge.survey`, `/forge.audit`, `/forge.context`, `/forge.constitution`.
+- **Thirteen slash commands** — `/forge-detect-stack`, `/forge-research`, `/forge-tdd`, `/forge-review`, `/forge-docs-sync`, `/forge-find-reuse`, `/forge-ast-search`, `/forge-ask`, `/forge-stats`, `/forge-survey`, `/forge-audit`, `/forge-context`, `/forge-constitution`.
 - **Seven hooks** — session-start (injects repo facts + project constitution), prompt-augment, pre-edit-guard (TDD, only enforced in tested packages), post-edit-format, post-edit-doc-mark, post-compact (reinjects project constitution after context compaction), speckit-context-inject (injects Forge context when a /speckit.* command fires).
 - **`detect-stack.sh`** — writes `.claude/stack.json` so Claude always uses your real build commands.
 - **`.claude-plugin/plugin.json`** — manifest so this can be distributed as a Claude Code plugin.
@@ -110,7 +110,7 @@ Forge tracks every file it installs in `.forge-manifest.json`. It only ever crea
 | `scripts/forge.sh` | Overwritten | Overwritten | Removed |
 | `CLAUDE.md` | **Written if missing only** | **Never touched** | **Preserved** |
 | `.claude/doc-index.json` | Created empty if missing | **Never touched** | **Preserved** |
-| `.claude/stack.json` | Auto-generated | Re-run via `/forge.detect-stack` | **Preserved** |
+| `.claude/stack.json` | Auto-generated | Re-run via `/forge-detect-stack` | **Preserved** |
 | `.forge/constitution.md` | **Never created** | **Never touched** | **Preserved** |
 | `.forge-backups/` | n/a | Snapshots added | **Preserved** |
 
@@ -120,23 +120,23 @@ After install, do these four things:
 
 1. **Edit `CLAUDE.md`.** Replace `{{REPO_NAME}}` and `{{LANGUAGES}}` with real values. Add any team-wide non-negotiable rules (max ~200 lines total — every line is loaded on every request).
 2. **Review `.mcp.json`.** The default ships filesystem + git MCP servers. Uncomment / add servers your team actually uses (Linear, Sentry, internal docs portal, etc.).
-3. **Run `/forge.constitution`** to create `.forge/constitution.md`. This encodes your project's non-negotiables and gets injected into every session automatically.
+3. **Run `/forge-constitution`** to create `.forge/constitution.md`. This encodes your project's non-negotiables and gets injected into every session automatically.
 4. **Open Claude Code in the repo** and try a few commands:
-   - `/forge.detect-stack` — verify it detected your real build commands and `ast_search_tool`.
-   - `/forge.stats` — confirm you can get an honest line count.
-   - `/forge.ask how does authentication work in this codebase?` — verify the oracle answers.
-   - `/forge.find-reuse "url parsing helper"` — verify the text + structural reuse search works.
-   - `/forge.research add a /healthz endpoint to the gateway` — verify the researcher produces a research brief.
-   - `/forge.context` — verify the context snapshot is written to `.forge/context-snapshot.json`.
+   - `/forge-detect-stack` — verify it detected your real build commands and `ast_search_tool`.
+   - `/forge-stats` — confirm you can get an honest line count.
+   - `/forge-ask how does authentication work in this codebase?` — verify the oracle answers.
+   - `/forge-find-reuse "url parsing helper"` — verify the text + structural reuse search works.
+   - `/forge-research add a /healthz endpoint to the gateway` — verify the researcher produces a research brief.
+   - `/forge-context` — verify the context snapshot is written to `.forge/context-snapshot.json`.
 
-If any of these fail, run `/forge.detect-stack` first; most issues stem from a missing or stale `stack.json`.
+If any of these fail, run `/forge-detect-stack` first; most issues stem from a missing or stale `stack.json`.
 
 ## Project constitution
 
 Before starting any feature work, create a project constitution — a short "soul file" that encodes your project's non-negotiables, architectural principles, and conventions:
 
 ```bash
-/forge.constitution
+/forge-constitution
 ```
 
 This runs an interactive, LLM-assisted authoring flow that scans the repo for signals (README, CLAUDE.md, ADRs, `.forge/` history), drafts each of the six required sections (Purpose, Non-negotiables, Architectural principles, Risk posture, Team conventions, Out of scope), and asks you to accept, edit, or skip each one before writing `.forge/constitution.md`.
@@ -153,16 +153,16 @@ The recommended workflow:
 
 ```bash
 # 1. Research feasibility and options before committing to a spec
-/forge.research "add rate limiting to the API gateway"
+/forge-research "add rate limiting to the API gateway"
 
 # 2. Hand the research brief + codebase context to your implementation tool
-/forge.context   # writes .forge/context-snapshot.json for any tool to read
+/forge-context   # writes .forge/context-snapshot.json for any tool to read
 
 # 3. Use your preferred implementation tool (e.g. Speckit / github/spec-kit)
 /speckit.specify  # Forge injects stack + stale-doc context automatically
 ```
 
-**Migrating from `/forge.tasks` / `/forge.clarify` / `/forge.implement`:** These commands were removed in v0.4.0. The equivalent workflow using [Speckit](https://github.com/github/spec-kit) is `/speckit.specify` for spec authoring and `/speckit.constitute` for project setup. Forge's knowledge primitives (`/forge.research`, `/forge.find-reuse`, `/forge.ask`) continue to work unchanged and are automatically injected into Speckit sessions via the `speckit-context-inject.sh` hook.
+**Migrating from `/forge-tasks` / `/forge-clarify` / `/forge-implement`:** These commands were removed in v0.4.0. The equivalent workflow using [Speckit](https://github.com/github/spec-kit) is `/speckit.specify` for spec authoring and `/speckit.constitute` for project setup. Forge's knowledge primitives (`/forge-research`, `/forge-find-reuse`, `/forge-ask`) continue to work unchanged and are automatically injected into Speckit sessions via the `speckit-context-inject.sh` hook.
 
 See `INTEGRATING.md` for the full context handoff protocol.
 
@@ -184,10 +184,10 @@ Forge works the same in headless mode. Common patterns:
 ```bash
 # Pre-commit hook — review the staged diff
 git diff --staged | claude -p --bare \
-  "Run /forge.review on this diff. Exit nonzero if you would request changes."
+  "Run /forge-review on this diff. Exit nonzero if you would request changes."
 
 # Nightly doc sync
-claude -p --bare "Run /forge.docs-sync. Open a PR if there are updates."
+claude -p --bare "Run /forge-docs-sync. Open a PR if there are updates."
 
 # CI knowledge-base check
 echo "Audit our bazel python build performance and recommend the top 3 fixes." \

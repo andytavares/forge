@@ -10,10 +10,10 @@ Reposition Forge from a self-contained implementation pipeline into a tool-agnos
 
 | ID | Title | Type | Depends on | Acceptance criteria |
 |---|---|---|---|---|
-| T-001 | Delete forge.tasks.md command | `deletion` | — | `.claude/commands/forge.tasks.md` does not exist in the repo |
-| T-002 | Delete forge.clarify.md command | `deletion` | — | `.claude/commands/forge.clarify.md` does not exist in the repo |
-| T-003 | Delete forge.implement.md command | `deletion` | — | `.claude/commands/forge.implement.md` does not exist in the repo |
-| T-004 | Delete forge.plan.md command | `deletion` | — | `.claude/commands/forge.plan.md` does not exist in the repo |
+| T-001 | Delete forge.tasks.md command | `deletion` | — | `.claude/commands/forge-tasks.md` does not exist in the repo |
+| T-002 | Delete forge.clarify.md command | `deletion` | — | `.claude/commands/forge-clarify.md` does not exist in the repo |
+| T-003 | Delete forge.implement.md command | `deletion` | — | `.claude/commands/forge-implement.md` does not exist in the repo |
+| T-004 | Delete forge.plan.md command | `deletion` | — | `.claude/commands/forge-plan.md` does not exist in the repo |
 | T-005 | Delete task-decomposition skill directory | `deletion` | — | `.claude/skills/task-decomposition/` directory does not exist in the repo |
 | T-006 | Delete clarify-spec skill directory | `deletion` | — | `.claude/skills/clarify-spec/` directory does not exist in the repo |
 | T-007 | Delete implement-plan skill directory | `deletion` | — | `.claude/skills/implement-plan/` directory does not exist in the repo |
@@ -26,9 +26,9 @@ Reposition Forge from a self-contained implementation pipeline into a tool-agnos
 | T-014 | Update detect-stack.sh — add ast_search_tool detection | `script` | — | After running detect-stack.sh, `.claude/stack.json` contains an `ast_search_tool` key with value `"ast-grep"`, `"semgrep"`, or `null` |
 | T-015 | Create ast-search skill SKILL.md | `skill` | T-014 | The ast-search skill can be invoked by name in a Claude Code session and reads `ast_search_tool` from stack.json to select the search binary |
 | T-016 | Create ast-search references/pattern-syntax.md | `docs-only` | T-015 | The file exists at `.claude/skills/ast-search/references/pattern-syntax.md` with pattern examples for JS/TS, Python, and Go |
-| T-017 | Create forge.ast-search.md command | `command` | T-015 | `/forge.ast-search <pattern>` is available in the slash-command menu and returns `file:line` structural matches |
-| T-018 | Update find-reuse SKILL.md — add ast-search pass | `skill` | T-015 | `/forge.find-reuse <term>` when ast-grep is available returns a merged result set from ripgrep text matches and ast-search structural matches, deduplicated and ranked |
-| T-019 | Create forge.context.md command | `command` | — | `/forge.context` writes `.forge/context-snapshot.json` containing stack.json contents, stale doc entries, and path to the most recent `.forge/*/research.md` |
+| T-017 | Create forge.ast-search.md command | `command` | T-015 | `/forge-ast-search <pattern>` is available in the slash-command menu and returns `file:line` structural matches |
+| T-018 | Update find-reuse SKILL.md — add ast-search pass | `skill` | T-015 | `/forge-find-reuse <term>` when ast-grep is available returns a merged result set from ripgrep text matches and ast-search structural matches, deduplicated and ranked |
+| T-019 | Create forge.context.md command | `command` | — | `/forge-context` writes `.forge/context-snapshot.json` containing stack.json contents, stale doc entries, and path to the most recent `.forge/*/research.md` |
 | T-020 | Create speckit-context-inject.sh hook | `hook` | T-019 | When a `/speckit.*` command fires, the hook's `additionalContext` output includes the current stack summary and stale doc count |
 | T-021 | Create INTEGRATING.md | `docs-only` | T-019, T-020 | `INTEGRATING.md` exists at repo root documenting the context-snapshot.json protocol, file locations, and the UserPromptExpansion hook pattern |
 | T-022 | Update doc-index.json — add entries for new files | `config` | T-010, T-015, T-016, T-017, T-018, T-019, T-020, T-021 | `.claude/doc-index.json` contains entries for forge.context.md, forge.ast-search.md, ast-search/SKILL.md, speckit-context-inject.sh, and INTEGRATING.md |

@@ -63,7 +63,7 @@ CLAUDE.md supports `@path` imports for organization. Imported content **still lo
 
 ### The project constitution: CLAUDE.md's companion
 
-`CLAUDE.md` is for org-wide rules that apply to every repo. The project constitution (`.forge/constitution.md`) is for project-specific identity — purpose, non-negotiables, architecture decisions, risk posture, team conventions, and out-of-scope items. It is authored interactively via `/forge.constitution`, which runs the `project-constitution` skill: the `researcher` subagent scans the repo for implicit principles, then walks you through each section one at a time.
+`CLAUDE.md` is for org-wide rules that apply to every repo. The project constitution (`.forge/constitution.md`) is for project-specific identity — purpose, non-negotiables, architecture decisions, risk posture, team conventions, and out-of-scope items. It is authored interactively via `/forge-constitution`, which runs the `project-constitution` skill: the `researcher` subagent scans the repo for implicit principles, then walks you through each section one at a time.
 
 Once created, the constitution is injected in two ways:
 - **`session-start.sh`** wraps it in `=== project-constitution ===` / `=== end project-constitution ===` delimiters so Claude sees it at the top of every session.
@@ -96,7 +96,7 @@ The scaffold ships twelve, listed below. The pattern: a skill exists when there'
 - **`tdd-workflow`** — codifies the researcher → test-author → code-reviewer sequence and routes work through subagents. References cover per-language test naming and BDD spec style.
 - **`canonical-research`** — codifies the official-docs-first rule and the citation format (URL + verbatim quote) for every external claim.
 - **`find-reuse`** — before writing any new helper, run a text + structural (ast-grep) sweep for existing implementations and return ranked candidates. Backed by a hook so Claude can't quietly skip it.
-- **`ast-search`** — structural code search via `ast-grep` (or `semgrep` fallback). Finds by code shape, not string. Called automatically by `find-reuse`; also available standalone via `/forge.ast-search`.
+- **`ast-search`** — structural code search via `ast-grep` (or `semgrep` fallback). Finds by code shape, not string. Called automatically by `find-reuse`; also available standalone via `/forge-ast-search`.
 - **`repo-conventions`** — read 2-3 analogous files before creating a new one. Mirror their naming, error style, import order, and test placement.
 - **`code-review`** — structured rubric for reviewing diffs (security, perf, conventions, coverage, docs).
 - **`doc-sync`** — the rules the `doc-keeper` subagent follows when updating markdown.
@@ -144,7 +144,7 @@ Three reasons:
 
 ![TDD loop with three subagents](diagrams/03-tdd-flow.svg)
 
-`/forge.tdd <task>` runs all three in sequence as a single pipeline. The researcher produces a plan, `test-author` writes failing tests and confirms they fail, your implementation tool makes them pass, and `code-reviewer` reviews the diff — all without mid-flow interruptions. The result is returned as a completed task summary.
+`/forge-tdd <task>` runs all three in sequence as a single pipeline. The researcher produces a plan, `test-author` writes failing tests and confirms they fail, your implementation tool makes them pass, and `code-reviewer` reviews the diff — all without mid-flow interruptions. The result is returned as a completed task summary.
 
 This mirrors what Anthropic's Security Engineering team described: their workflow went from "design doc → janky code → refactor → give up on tests" to "ask Claude for pseudocode, guide it through test-driven development, check in periodically" ([How Anthropic teams use Claude Code](https://www.anthropic.com/news/how-anthropic-teams-use-claude-code)).
 
@@ -340,25 +340,25 @@ This is the only sustainable shape: docs and code are linked by a checked-in ind
 
 Thirteen commands tie the knowledge layer together. Each is just a markdown file in `.claude/commands/` ([Slash commands](https://docs.claude.com/en/docs/claude-code/slash-commands)).
 
-> **v0.4.0:** The pipeline commands (`/forge.plan`, `/forge.tasks`, `/forge.clarify`, `/forge.implement`) were removed. Forge no longer owns the implementation workflow — it provides knowledge context to whichever tool you use (e.g. [Speckit](https://github.com/github/spec-kit)).
+> **v0.4.0:** The pipeline commands (`/forge-plan`, `/forge-tasks`, `/forge-clarify`, `/forge-implement`) were removed. Forge no longer owns the implementation workflow — it provides knowledge context to whichever tool you use (e.g. [Speckit](https://github.com/github/spec-kit)).
 
 | Command | What it does |
 |---|---|
-| `/forge.detect-stack` | Runs `build-detective`, writes `.claude/stack.json`, prints summary. |
-| `/forge.research <topic>` | Researcher subagent produces a structured feasibility brief: official-doc citations, codebase findings, options comparison, recommendation. Writes `.forge/NNN-slug/research.md`. |
-| `/forge.tdd <task>` | Researcher → test-author → code-reviewer, runs as a single pipeline. |
-| `/forge.review` | Code-reviewer subagent against `git diff HEAD`. |
-| `/forge.docs-sync` | Doc-keeper subagent runs a full markdown refresh. |
-| `/forge.find-reuse <term>` | Text + structural (ast-grep) search; returns up to 5 ranked prior-art candidates. |
-| `/forge.ast-search <pattern>` | Structural code search using `ast-grep`. Returns `file:line` matches for a code-shape pattern. |
-| `/forge.ask <question>` | Routes to `codebase-oracle`; answers any question about the codebase. |
-| `/forge.stats` | Quantitative repo summary — lines by language, test ratio, top contributors. |
-| `/forge.survey <topic>` | Pattern survey for a cross-cutting concern (auth, retries, logging, etc.). |
-| `/forge.audit <symptom>` | Diagnoses a build/test/tooling problem; ranks hypotheses by confidence × impact. |
-| `/forge.context` | Writes `.forge/context-snapshot.json` — stack, stale docs, latest research brief — for any external tool to consume. |
-| `/forge.constitution` | Interactive authoring of `.forge/constitution.md` — create, update a section, or regenerate from scratch. |
+| `/forge-detect-stack` | Runs `build-detective`, writes `.claude/stack.json`, prints summary. |
+| `/forge-research <topic>` | Researcher subagent produces a structured feasibility brief: official-doc citations, codebase findings, options comparison, recommendation. Writes `.forge/NNN-slug/research.md`. |
+| `/forge-tdd <task>` | Researcher → test-author → code-reviewer, runs as a single pipeline. |
+| `/forge-review` | Code-reviewer subagent against `git diff HEAD`. |
+| `/forge-docs-sync` | Doc-keeper subagent runs a full markdown refresh. |
+| `/forge-find-reuse <term>` | Text + structural (ast-grep) search; returns up to 5 ranked prior-art candidates. |
+| `/forge-ast-search <pattern>` | Structural code search using `ast-grep`. Returns `file:line` matches for a code-shape pattern. |
+| `/forge-ask <question>` | Routes to `codebase-oracle`; answers any question about the codebase. |
+| `/forge-stats` | Quantitative repo summary — lines by language, test ratio, top contributors. |
+| `/forge-survey <topic>` | Pattern survey for a cross-cutting concern (auth, retries, logging, etc.). |
+| `/forge-audit <symptom>` | Diagnoses a build/test/tooling problem; ranks hypotheses by confidence × impact. |
+| `/forge-context` | Writes `.forge/context-snapshot.json` — stack, stale docs, latest research brief — for any external tool to consume. |
+| `/forge-constitution` | Interactive authoring of `.forge/constitution.md` — create, update a section, or regenerate from scratch. |
 
-The knowledge-base commands (`/ask`, `/stats`, `/survey`, `/audit`) route to the `codebase-oracle` and its skills. The knowledge-layer workflow: `/constitution` (one-time setup) → `/research` (feasibility) → `/forge.context` (export snapshot for your implementation tool).
+The knowledge-base commands (`/ask`, `/stats`, `/survey`, `/audit`) route to the `codebase-oracle` and its skills. The knowledge-layer workflow: `/constitution` (one-time setup) → `/research` (feasibility) → `/forge-context` (export snapshot for your implementation tool).
 
 ---
 

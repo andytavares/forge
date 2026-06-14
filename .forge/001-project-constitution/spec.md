@@ -1,7 +1,7 @@
-Implement /forge.constitution — a skill that generates and manages .forge/constitution.md via interactive LLM-assisted authoring. The constitution is a "soul file" encoding project purpose, non-negotiables, architectural principles, risk posture, team conventions, and out-of-scope items. It must be injected into Claude's context at every SessionStart and after every PostCompact event.
+Implement /forge-constitution — a skill that generates and manages .forge/constitution.md via interactive LLM-assisted authoring. The constitution is a "soul file" encoding project purpose, non-negotiables, architectural principles, risk posture, team conventions, and out-of-scope items. It must be injected into Claude's context at every SessionStart and after every PostCompact event.
 
 Files to create/modify:
-1. CREATE .claude/commands/forge.constitution.md — slash command definition
+1. CREATE .claude/commands/forge-constitution.md — slash command definition
 2. CREATE .claude/skills/project-constitution/SKILL.md — the authoring skill
 3. MODIFY .claude/hooks/session-start.sh — inject constitution block at the end
 4. CREATE .claude/hooks/post-compact.sh — new hook: reinject constitution after context compaction

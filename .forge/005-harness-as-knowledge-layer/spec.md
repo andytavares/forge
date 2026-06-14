@@ -17,10 +17,10 @@ Full research and all resolved open questions are in `.forge/005-harness-as-know
 ### Files to delete
 
 **Commands:**
-- `.claude/commands/forge.tasks.md`
-- `.claude/commands/forge.clarify.md`
-- `.claude/commands/forge.implement.md`
-- `.claude/commands/forge.plan.md` — superseded by `/forge.research`
+- `.claude/commands/forge-tasks.md`
+- `.claude/commands/forge-clarify.md`
+- `.claude/commands/forge-implement.md`
+- `.claude/commands/forge-plan.md` — superseded by `/forge-research`
 
 **Skills:**
 - `.claude/skills/task-decomposition/` (entire directory)
@@ -44,9 +44,9 @@ Full research and all resolved open questions are in `.forge/005-harness-as-know
 
 ## Work Stream 2: Context Handoff
 
-### New command: `/forge.context`
+### New command: `/forge-context`
 
-Add `.claude/commands/forge.context.md` — a command that writes `.forge/context-snapshot.json` aggregating:
+Add `.claude/commands/forge-context.md` — a command that writes `.forge/context-snapshot.json` aggregating:
 - Current `stack.json` contents
 - All `doc-index.json` entries with non-zero `staleness_score`
 - Path to the most recent research brief under `.forge/`
@@ -83,9 +83,9 @@ Add `.claude/skills/ast-search/SKILL.md` — a skill that performs structural co
 
 Add `.claude/skills/ast-search/references/pattern-syntax.md` — a reference for `ast-grep` pattern syntax for the most common languages (JS/TS, Python, Go).
 
-### New command: `/forge.ast-search`
+### New command: `/forge-ast-search`
 
-Add `.claude/commands/forge.ast-search.md` — exposes the `ast-search` skill as a slash command.
+Add `.claude/commands/forge-ast-search.md` — exposes the `ast-search` skill as a slash command.
 
 ### Update: `find-reuse` skill
 
@@ -100,8 +100,8 @@ Edit `scripts/detect-stack.sh` — detect whether `ast-grep` or `semgrep` is ava
 ## Acceptance Criteria (feature-level)
 
 1. After applying this change, running `forge.sh install` on a clean repo installs no pipeline files (forge.tasks, forge.clarify, forge.implement, task-decomposition, clarify-spec, implement-plan, implementer.md).
-2. `/forge.find-reuse <term>` returns both text-match and structural-match candidates when `ast-grep` is available.
-3. `/forge.ast-search <pattern>` returns `file:line` matches for a structural pattern.
-4. `.forge/context-snapshot.json` is written by `/forge.context` and contains stack, stale-doc list, and latest research brief path.
+2. `/forge-find-reuse <term>` returns both text-match and structural-match candidates when `ast-grep` is available.
+3. `/forge-ast-search <pattern>` returns `file:line` matches for a structural pattern.
+4. `.forge/context-snapshot.json` is written by `/forge-context` and contains stack, stale-doc list, and latest research brief path.
 5. When a `/speckit.*` command fires in a Claude Code session with Forge installed, `additionalContext` is injected with current stack summary and stale doc count.
 6. `README.md` and `forge-blog.md` reflect the new scope: knowledge layer, not pipeline.

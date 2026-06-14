@@ -7,7 +7,7 @@
 **Title:** Update README.md for all v0.2.0 changes
 **Description:** Apply 10 targeted edits to README.md: correct component counts, remove rsync prerequisite, update install/update/uninstall/status descriptions for file-level ownership, replace the ownership table with the co-ownership model, add step 4 to first-run checklist, update feature workflow command descriptions to remove pause language, and add a Project Constitution section.
 **Acceptance criteria:**
-1. README.md states 13 skills, 14 slash commands, 6 hooks, 7 subagents, and lists /forge.constitution and post-compact.sh.
+1. README.md states 13 skills, 14 slash commands, 6 hooks, 7 subagents, and lists /forge-constitution and post-compact.sh.
 2. README.md does not mention rsync in prerequisites or describe rsync --delete in update behavior.
 3. README.md has a "Project Constitution" section describing .forge/constitution.md, the authoring flow, and session injection.
 4. The ownership table shows user files in shared dirs as "Never touched" on all operations.

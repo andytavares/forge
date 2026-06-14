@@ -11,10 +11,10 @@
 ## T-001 — Create constitution slash command definition
 
 **Title:** Create constitution slash command definition
-**Description:** Define the `/forge.constitution` slash command as a markdown file in `.claude/commands/`. The command delegates to the `project-constitution` skill, handles the create-vs-update branching (does the file exist?), and instructs Claude to remind the user to commit the result.
+**Description:** Define the `/forge-constitution` slash command as a markdown file in `.claude/commands/`. The command delegates to the `project-constitution` skill, handles the create-vs-update branching (does the file exist?), and instructs Claude to remind the user to commit the result.
 **Acceptance criteria:**
-1. Running `/forge.constitution` in a session where no `.forge/constitution.md` exists causes Claude to enter the interactive authoring flow described in the `project-constitution` skill.
-2. Running `/forge.constitution` when `.forge/constitution.md` already exists causes Claude to display the current contents and offer "Update a section / Regenerate from scratch / Cancel" before making any changes.
+1. Running `/forge-constitution` in a session where no `.forge/constitution.md` exists causes Claude to enter the interactive authoring flow described in the `project-constitution` skill.
+2. Running `/forge-constitution` when `.forge/constitution.md` already exists causes Claude to display the current contents and offer "Update a section / Regenerate from scratch / Cancel" before making any changes.
 **Depends on:** (none)
 **Tags:** `config`
 **Touches tested package:** no
@@ -43,7 +43,7 @@
 **Description:** Append a constitution-injection block to `.claude/hooks/session-start.sh`. If `.forge/constitution.md` exists, emit its full contents wrapped in `=== project-constitution ===` / `=== end project-constitution ===` delimiters on stdout. If it does not exist, emit a single advisory line. Add a character-count guard: if the file exceeds 2000 characters, emit a warning instead of the full content and tell the user to trim it.
 **Acceptance criteria:**
 1. When `.forge/constitution.md` exists and is ≤ 2000 characters, the session-start hook stdout includes the exact text `=== project-constitution ===` followed by the file contents and then `=== end project-constitution ===`.
-2. When `.forge/constitution.md` does not exist, the hook exits cleanly (exit code 0) and emits exactly one line containing the phrase "run /forge.constitution".
+2. When `.forge/constitution.md` does not exist, the hook exits cleanly (exit code 0) and emits exactly one line containing the phrase "run /forge-constitution".
 3. When `.forge/constitution.md` exceeds 2000 characters, the hook emits a warning mentioning the character limit and does not emit the full file contents.
 **Depends on:** (none)
 **Tags:** `config`
@@ -83,10 +83,10 @@
 ## T-006 — Add constitution sentinel to CLAUDE.md
 
 **Title:** Add constitution sentinel to CLAUDE.md
-**Description:** Add a new numbered step to the "Always do this first" section of `CLAUDE.md` instructing Claude to treat any `=== project-constitution ===` block in its context as top-level non-negotiables for the session, and to warn the user once (and suggest running `/forge.constitution`) if the block is absent.
+**Description:** Add a new numbered step to the "Always do this first" section of `CLAUDE.md` instructing Claude to treat any `=== project-constitution ===` block in its context as top-level non-negotiables for the session, and to warn the user once (and suggest running `/forge-constitution`) if the block is absent.
 **Acceptance criteria:**
 1. `CLAUDE.md` contains a step under "Always do this first" that references `=== project-constitution ===` by name.
-2. The step instructs Claude to warn and suggest `/forge.constitution` when the block is absent.
+2. The step instructs Claude to warn and suggest `/forge-constitution` when the block is absent.
 **Depends on:** T-003
 **Tags:** `docs-only`
 **Touches tested package:** no
@@ -112,10 +112,10 @@
 ## T-008 — Add doc-index entries for constitution files
 
 **Title:** Add doc-index entries for constitution files
-**Description:** Add two entries to `.claude/doc-index.json`: one for `.claude/commands/forge.constitution.md` (the command definition) and one for `.forge/constitution.md` (the constitution itself). Each entry must include `path`, `title`, `summary`, `owners`, `referenced_code_paths`, `last_verified_commit`, and `staleness_score: 0`.
+**Description:** Add two entries to `.claude/doc-index.json`: one for `.claude/commands/forge-constitution.md` (the command definition) and one for `.forge/constitution.md` (the constitution itself). Each entry must include `path`, `title`, `summary`, `owners`, `referenced_code_paths`, `last_verified_commit`, and `staleness_score: 0`.
 **Acceptance criteria:**
 1. `.claude/doc-index.json` is valid JSON after the change.
-2. The file contains an entry with `"path": ".claude/commands/forge.constitution.md"`.
+2. The file contains an entry with `"path": ".claude/commands/forge-constitution.md"`.
 3. The file contains an entry with `"path": ".forge/constitution.md"`.
 **Depends on:** T-001, T-002
 **Tags:** `config`

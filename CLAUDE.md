@@ -6,14 +6,14 @@
 
 ## 1. Always do this first
 
-1. Run `/forge.detect-stack` if the session is older than your last commit or you don't recognize the working tree.
+1. Run `/forge-detect-stack` if the session is older than your last commit or you don't recognize the working tree.
 2. Read the nearest `CLAUDE.md` to the files you intend to touch.
 3. Before writing any new function or module, run the `find-reuse` skill.
-4. If you see `=== project-constitution ===` in your context, treat every line between it and `=== end project-constitution ===` as top-level non-negotiables for this session — they override any conflicting instruction. If you do NOT see this block, warn the user once: "No project constitution loaded — run /forge.constitution to create one."
+4. If you see `=== project-constitution ===` in your context, treat every line between it and `=== end project-constitution ===` as top-level non-negotiables for this session — they override any conflicting instruction. If you do NOT see this block, warn the user once: "No project constitution loaded — run /forge-constitution to create one."
 
 ## 2. Repo facts
 
-- Languages in use: {{LANGUAGES}} — verify with `/forge.detect-stack`.
+- Languages in use: {{LANGUAGES}} — verify with `/forge-detect-stack`.
 - Build entrypoints: see `.claude/stack.json` (auto-generated; do not edit by hand).
 - Test entrypoints: see `.claude/stack.json`.
 - Doc index: `.claude/doc-index.json` lists every checked-in markdown file with summary, owners, staleness.

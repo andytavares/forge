@@ -31,15 +31,15 @@ Andrew wants to reposition Forge from a tool that owns the full feature-delivery
 
 ### Commands — pipeline-owning (candidates for removal)
 
-- `/forge.tasks` — `.claude/commands/forge.tasks.md:1-19`. Creates `.forge/NNN-slug/`, calls `task-decomposition` skill, writes `tasks.md`. Explicitly chains to `/forge.clarify`.
-- `/forge.clarify` — `.claude/commands/forge.clarify.md:1-23`. Calls `clarify-spec` skill, writes `clarifications.md`. Explicitly chains to `/forge.implement`.
-- `/forge.implement` — `.claude/commands/forge.implement.md:1-29`. Creates a git worktree at `.worktrees/NNN-slug/`, runs `implement-plan` skill, routes tasks through TDD/implementer/code-reviewer/docs-sync.
+- `/forge-tasks` — `.claude/commands/forge-tasks.md:1-19`. Creates `.forge/NNN-slug/`, calls `task-decomposition` skill, writes `tasks.md`. Explicitly chains to `/forge-clarify`.
+- `/forge-clarify` — `.claude/commands/forge-clarify.md:1-23`. Calls `clarify-spec` skill, writes `clarifications.md`. Explicitly chains to `/forge-implement`.
+- `/forge-implement` — `.claude/commands/forge-implement.md:1-29`. Creates a git worktree at `.worktrees/NNN-slug/`, runs `implement-plan` skill, routes tasks through TDD/implementer/code-reviewer/docs-sync.
 
 ### Commands — knowledge/utility (keep)
 
-`/forge.research`, `/forge.ask`, `/forge.detect-stack`, `/forge.docs-sync`, `/forge.find-reuse`, `/forge.review`, `/forge.stats`, `/forge.survey`, `/forge.tdd`, `/forge.constitution`, `/forge.plan`, `/forge.audit`
+`/forge-research`, `/forge-ask`, `/forge-detect-stack`, `/forge-docs-sync`, `/forge-find-reuse`, `/forge-review`, `/forge-stats`, `/forge-survey`, `/forge-tdd`, `/forge-constitution`, `/forge-plan`, `/forge-audit`
 
-Note: `/forge.plan` (`.claude/commands/forge.plan.md:1-5`) is a thin wrapper — "Run the researcher subagent for: $ARGUMENTS / Return only the plan. Do not start editing." It is a knowledge primitive, not a pipeline command.
+Note: `/forge-plan` (`.claude/commands/forge-plan.md:1-5`) is a thin wrapper — "Run the researcher subagent for: $ARGUMENTS / Return only the plan. Do not start editing." It is a knowledge primitive, not a pipeline command.
 
 ### Skills — pipeline-owning (candidates for removal)
 
@@ -78,9 +78,9 @@ Every hook is already pipeline-agnostic. None reference `.forge/NNN-slug/` or an
 ### Doc-index pipeline entries (`.claude/doc-index.json`)
 
 6 of 13 entries reference pipeline-specific files:
-- `.claude/commands/forge.tasks.md` (lines 58-67)
-- `.claude/commands/forge.clarify.md` (lines 69-78)
-- `.claude/commands/forge.implement.md` (lines 80-90)
+- `.claude/commands/forge-tasks.md` (lines 58-67)
+- `.claude/commands/forge-clarify.md` (lines 69-78)
+- `.claude/commands/forge-implement.md` (lines 80-90)
 - `.claude/skills/task-decomposition/SKILL.md` (lines 91-100)
 - `.claude/skills/clarify-spec/SKILL.md` (lines 101-111)
 - `.claude/skills/implement-plan/SKILL.md` (lines 112-124)
@@ -225,9 +225,9 @@ Quote: "Claude Code sets CLAUDE_PROJECT_DIR in the spawned server's environment 
 
 2. ~~**Remove or repurpose `implementer.md`?**~~ — **CLOSED: Remove.** Remove `implementer.md` with the rest of the pipeline files.
 
-3. ~~**What should the context snapshot format be?**~~ — **CLOSED: Go with the recommendation** (Option 3A file-based + 3D prompt-convention). Add `/forge.context` command and document the protocol.
+3. ~~**What should the context snapshot format be?**~~ — **CLOSED: Go with the recommendation** (Option 3A file-based + 3D prompt-convention). Add `/forge-context` command and document the protocol.
 
-4. ~~**Is `/forge.plan` superseded by `/forge.research`?**~~ — **CLOSED: Yes. Remove `/forge.plan`.** `/forge.research` replaces it with a richer five-phase protocol and a durable file output.
+4. ~~**Is `/forge-plan` superseded by `/forge-research`?**~~ — **CLOSED: Yes. Remove `/forge-plan`.** `/forge-research` replaces it with a richer five-phase protocol and a durable file output.
 
 5. ~~**Versioning strategy?**~~ — **CLOSED: Bump to next minor (v0.4.0).** Removal of pipeline commands is a breaking change; a minor bump signals intentional scope narrowing.
 
@@ -237,7 +237,7 @@ Quote: "Claude Code sets CLAUDE_PROJECT_DIR in the spawned server's environment 
 
 1. **Prune pipeline files** — delete `forge.tasks.md`, `forge.clarify.md`, `forge.implement.md`, `task-decomposition/`, `clarify-spec/`, `implement-plan/`, `implementer.md`.
 2. **Update doc-index** — remove 6 pipeline entries; update README command/skill counts; add migration note to `forge-blog.md`.
-3. **Add `/forge.context` command** — writes `.forge/context-snapshot.json` aggregating stack + doc-index + latest research brief.
+3. **Add `/forge-context` command** — writes `.forge/context-snapshot.json` aggregating stack + doc-index + latest research brief.
 4. **Document the protocol** — add `INTEGRATING.md` describing file-based context handoff. Include the `UserPromptExpansion` hook pattern for Speckit: detect `/speckit.*` command expansion, inject `additionalContext` with stack + stale docs + last research brief.
 5. **Wire `UserPromptExpansion` hook for Speckit** — one new hook script, pattern-matches on `/speckit.*`, injects the context snapshot. This makes Option 3D live for Speckit without any Speckit-side changes.
 6. **Defer Speckit extension path** — the `.specify/` preset/extension approach requires authoring and maintaining a Speckit extension. Revisit only if hook-based injection proves insufficient.

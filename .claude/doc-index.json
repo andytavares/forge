@@ -55,8 +55,8 @@
       "staleness_score": 0
     },
     {
-      "path": ".claude/commands/forge.constitution.md",
-      "title": "/forge.constitution — create and manage the project constitution",
+      "path": ".claude/commands/forge-constitution.md",
+      "title": "/forge-constitution — create and manage the project constitution",
       "summary": "Slash command: interactive authoring of .forge/constitution.md, injected every session via session-start.sh and post-compact.sh.",
       "owners": [],
       "referenced_code_paths": [
@@ -77,8 +77,8 @@
       "staleness_score": 0
     },
     {
-      "path": ".claude/commands/forge.research.md",
-      "title": "/forge.research — produce a structured research brief",
+      "path": ".claude/commands/forge-research.md",
+      "title": "/forge-research — produce a structured research brief",
       "summary": "Slash command: runs research-topic skill to produce a canonical-sources-first research document at .forge/NNN-slug/research.md. Includes official doc citations, codebase findings, options comparison, and a recommendation.",
       "owners": [],
       "referenced_code_paths": [
@@ -103,7 +103,7 @@
     {
       "path": ".claude/skills/ast-search/SKILL.md",
       "title": "ast-search skill",
-      "summary": "Structural code search using ast-grep (primary) or semgrep (fallback). Reads ast_search_tool from stack.json, returns file:line matches by code shape. Called by find-reuse; also available standalone via /forge.ast-search.",
+      "summary": "Structural code search using ast-grep (primary) or semgrep (fallback). Reads ast_search_tool from stack.json, returns file:line matches by code shape. Called by find-reuse; also available standalone via /forge-ast-search.",
       "owners": [],
       "referenced_code_paths": [
         ".claude/skills/ast-search/references/pattern-syntax.md",
@@ -114,8 +114,8 @@
       "staleness_score": 0
     },
     {
-      "path": ".claude/commands/forge.ast-search.md",
-      "title": "/forge.ast-search — structural code search",
+      "path": ".claude/commands/forge-ast-search.md",
+      "title": "/forge-ast-search — structural code search",
       "summary": "Slash command: runs ast-search skill to find code by shape using ast-grep or semgrep. Returns file:line matches.",
       "owners": [],
       "referenced_code_paths": [
@@ -125,8 +125,8 @@
       "staleness_score": 0
     },
     {
-      "path": ".claude/commands/forge.context.md",
-      "title": "/forge.context — export context snapshot",
+      "path": ".claude/commands/forge-context.md",
+      "title": "/forge-context — export context snapshot",
       "summary": "Slash command: writes .forge/context-snapshot.json aggregating stack.json, stale doc-index entries, and latest research brief path. Single integration point for external tools.",
       "owners": [],
       "referenced_code_paths": [
@@ -157,7 +157,7 @@
       "owners": [],
       "referenced_code_paths": [
         ".claude/hooks/speckit-context-inject.sh",
-        ".claude/commands/forge.context.md",
+        ".claude/commands/forge-context.md",
         ".claude/stack.json"
       ],
       "last_verified_commit": "524816b",

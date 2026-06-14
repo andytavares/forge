@@ -4,7 +4,7 @@ description: Export a context snapshot for external tools. Writes .forge/context
 
 Write `.forge/context-snapshot.json` with the following steps:
 
-1. Read `.claude/stack.json`. If it does not exist or is older than 7 days, print a warning: "stack.json is missing or stale — run /forge.detect-stack first." and stop.
+1. Read `.claude/stack.json`. If it does not exist or is older than 7 days, print a warning: "stack.json is missing or stale — run /forge-detect-stack first." and stop.
 
 2. Read `.claude/doc-index.json`. Collect all entries where `staleness_score > 0`. These are stale docs.
 

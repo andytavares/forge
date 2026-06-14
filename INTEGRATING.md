@@ -10,10 +10,10 @@ After installing Forge, three files are always available to any tool:
 
 | File | Written by | Contents |
 |---|---|---|
-| `.claude/stack.json` | `detect-stack.sh` (on install + `/forge.detect-stack`) | Languages, build/test/lint/format commands, `ast_search_tool` |
+| `.claude/stack.json` | `detect-stack.sh` (on install + `/forge-detect-stack`) | Languages, build/test/lint/format commands, `ast_search_tool` |
 | `.claude/doc-index.json` | Forge install; updated by `post-edit-doc-mark.sh` hook | All indexed markdown files with staleness scores |
-| `.forge/context-snapshot.json` | `/forge.context` command | Aggregated snapshot: stack + stale docs + latest research brief path |
-| `.forge/<NNN>-slug/research.md` | `/forge.research` command | Structured feasibility brief for a given topic |
+| `.forge/context-snapshot.json` | `/forge-context` command | Aggregated snapshot: stack + stale docs + latest research brief path |
+| `.forge/<NNN>-slug/research.md` | `/forge-research` command | Structured feasibility brief for a given topic |
 
 Any tool that reads these files gets full Forge context without any API calls or hook wiring.
 
@@ -55,10 +55,10 @@ if ! echo "$PROMPT" | grep -Eq '^\s*/(speckit|cursor|mytools)\.'; then
 
 ```bash
 # 1. Research before speccing
-/forge.research "add rate limiting to the API gateway"
+/forge-research "add rate limiting to the API gateway"
 
 # 2. Export current context snapshot
-/forge.context
+/forge-context
 
 # 3. Run Speckit — Forge context is injected automatically
 /speckit.specify "add rate limiting to the API gateway"
@@ -74,7 +74,7 @@ If your tool runs **outside Claude Code** (a separate CLI, CI job, web service),
 
 ```bash
 # Generate a fresh context snapshot
-claude -p --bare "/forge.context"
+claude -p --bare "/forge-context"
 
 # Your tool reads the snapshot
 cat .forge/context-snapshot.json | jq '.stack.languages'
