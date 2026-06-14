@@ -1,0 +1,87 @@
+README.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 12,113,123,125-130,132,139,156,159,165,187,190
+.claude/doc-index.json
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 58-59,80-81,106,117-118,128-129,160
+.forge/003-documentation-update/tasks.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 10
+.claude/commands/forge-tdd.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 1-12
+.claude/commands/forge-ask.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 1-9
+.claude/commands/forge-review.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 1-11
+.claude/commands/forge-survey.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 1-9
+.claude/commands/forge-docs-sync.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 1-12
+.claude/commands/forge-detect-stack.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 1-5
+.claude/hooks/session-start.sh
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 16,41,48
+.claude/skills/ast-search/SKILL.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 16
+.forge/001-project-constitution/spec.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 1,4
+.forge/005-harness-as-knowledge-layer/topic.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 1
+INTEGRATING.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 13,15-16,58,61,77
+.claude/commands/forge-audit.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 1-9
+.forge/004-forge-research-skill/tasks.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 5,15,17-19
+.claude/commands/forge-research.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 16,23
+CLAUDE.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 9,12,16
+.forge/001-project-constitution/tasks.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 14,16-17,46,86,89,115,118
+.claude/commands/forge-constitution.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 1-24
+.claude/commands/forge-context.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 7
+.claude/hooks/speckit-context-inject.sh
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 24
+.claude/skills/research-topic/SKILL.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 79-80
+.forge/005-harness-as-knowledge-layer/tasks.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 13-16,29-31
+.forge/004-forge-research-skill/spec.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 1,5,11,18,30,62-63,75
+.claude/commands/forge-find-reuse.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 1-7
+.claude/commands/forge-ast-search.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 1-7
+forge-blog.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 66,99,147,343,347-361
+.claude/skills/project-constitution/SKILL.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 17
+.claude/skills/research-topic/references/research-doc-schema.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 75,80-81
+scripts/forge.sh
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 224
+.claude/hooks/post-compact.sh
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 15,22
+.claude/commands/forge-stats.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 1-12
+.forge/005-harness-as-knowledge-layer/research.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 34-36,40,42,81-83,228,230,240
+.forge/005-harness-as-knowledge-layer/spec.md
+  s_9fe42ab5f904ab::t_ecfedd7280cbe4 20-23,47,49,86,88,103-105
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "ce1cc344c206d85c288fbf65a0aa7a49f5e7ee79",
+  "prompts": {},
+  "sessions": {
+    "s_9fe42ab5f904ab": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "78f9c32b-42f6-4275-9e42-cc0b21f2d43c",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Andrew <andrew.tavaes87@gmail.com>"
+    }
+  }
+}
