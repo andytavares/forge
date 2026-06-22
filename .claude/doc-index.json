@@ -4,7 +4,7 @@
     {
       "path": "README.md",
       "title": "Forge — Claude Code harness",
-      "summary": "Installation, update, uninstall, and feature overview for the Forge Claude Code scaffold (v0.4.0). Knowledge-layer model: 13 slash commands, 12 skills, 6 subagents, 7 hooks. Pipeline commands removed; use Speckit or your own tool for implementation.",
+      "summary": "Installation, update, uninstall, and feature overview for the Forge Claude Code scaffold (v0.4.0). Knowledge-layer model; the canonical inventory of slash commands, skills, subagents, and hooks lives here (counts are not duplicated in other docs). Pipeline commands removed; use Speckit or your own tool for implementation.",
       "owners": [],
       "referenced_code_paths": [
         "scripts/forge.sh",
@@ -35,18 +35,13 @@
     {
       "path": "forge-blog.md",
       "title": "Building a Claude Harness — design rationale",
-      "summary": "Long-form write-up of the harness design: CLAUDE.md + project constitution, 12 skills (including ast-search), 6 subagents, 7 hooks, MCP, settings. v0.4.0 pivot: knowledge-layer model, pipeline removed, Speckit context injection.",
+      "summary": "Long-form write-up of the harness design: CLAUDE.md + project constitution, skills (including ast-search and change-management/test-quality/decision-record tooling), subagents, hooks, MCP, settings. Describes each layer's rationale; inventory counts live in README.md, not here. v0.4.0 pivot: knowledge-layer model, pipeline removed, Speckit context injection.",
       "owners": [],
       "referenced_code_paths": [
         "scripts/forge.sh",
         "scripts/detect-stack.sh",
         ".claude/settings.json",
-        ".claude/hooks/session-start.sh",
-        ".claude/hooks/post-compact.sh",
-        ".claude/hooks/prompt-augment.sh",
-        ".claude/hooks/pre-edit-guard.sh",
-        ".claude/hooks/post-edit-format.sh",
-        ".claude/hooks/post-edit-doc-mark.sh",
+        ".claude/hooks/",
         ".claude/skills/",
         ".claude/agents/",
         ".claude/commands/"

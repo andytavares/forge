@@ -7,10 +7,10 @@ A cookiecutter Claude Code harness for large multi-language codebases. Drop it i
 - **`CLAUDE.md`** template — short, signal-dense, repo-wide rules loaded every session.
 - **`.claude/settings.json`** — sane allow/deny permission set + hook wiring.
 - **`.mcp.json`** — MCP server config (filesystem + git out of the box, examples for the rest).
-- **Six subagents** — researcher, test-author, code-reviewer, doc-keeper, build-detective, codebase-oracle.
-- **Twelve skills** — canonical-research, tdd-workflow, repo-conventions, find-reuse, ast-search, code-review, doc-sync, codebase-stats, pattern-survey, build-audit, project-constitution, research-topic.
-- **Thirteen slash commands** — `/forge-detect-stack`, `/forge-research`, `/forge-tdd`, `/forge-review`, `/forge-docs-sync`, `/forge-find-reuse`, `/forge-ast-search`, `/forge-ask`, `/forge-stats`, `/forge-survey`, `/forge-audit`, `/forge-context`, `/forge-constitution`.
-- **Seven hooks** — session-start (injects repo facts + project constitution), prompt-augment, pre-edit-guard (TDD, only enforced in tested packages), post-edit-format, post-edit-doc-mark, post-compact (reinjects project constitution after context compaction), speckit-context-inject (injects Forge context when a /speckit.* command fires).
+- **Eight subagents** — researcher, test-author, code-reviewer, doc-keeper, build-detective, codebase-oracle, test-quality-reviewer, change-impact-analyst.
+- **Seventeen skills** — canonical-research, tdd-workflow, repo-conventions, find-reuse, ast-search, code-review, doc-sync, codebase-stats, pattern-survey, build-audit, project-constitution, research-topic, large-scale-change, deprecation-plan, trade-off-record, postmortem, test-quality-review.
+- **Eighteen slash commands** — `/forge-detect-stack`, `/forge-research`, `/forge-tdd`, `/forge-review`, `/forge-docs-sync`, `/forge-find-reuse`, `/forge-ast-search`, `/forge-ask`, `/forge-stats`, `/forge-survey`, `/forge-audit`, `/forge-context`, `/forge-constitution`, `/forge-lsc`, `/forge-deprecate`, `/forge-decision`, `/forge-postmortem`, `/forge-test-review`.
+- **Nine hooks** — session-start (injects repo facts + project constitution), prompt-augment, pre-edit-guard (TDD, only enforced in tested packages), post-edit-format, post-edit-doc-mark, post-compact (reinjects project constitution after context compaction), speckit-context-inject (injects Forge context when a /speckit.* command fires), post-edit-test-smell (advisory test-smell warnings after edits), prompt-change-mgmt (advisory change-management prompts).
 - **`detect-stack.sh`** — writes `.claude/stack.json` so Claude always uses your real build commands.
 - **`.claude-plugin/plugin.json`** — manifest so this can be distributed as a Claude Code plugin.
 - **`forge.sh`** — interactive installer with install / update / uninstall / status / restore.

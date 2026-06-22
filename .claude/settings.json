@@ -56,6 +56,7 @@
     "UserPromptSubmit": [
       { "hooks": [
         { "type": "command", "command": ".claude/hooks/prompt-augment.sh" },
+        { "type": "command", "command": ".claude/hooks/prompt-change-mgmt.sh" },
         { "type": "command", "command": ".claude/hooks/speckit-context-inject.sh" }
       ]}
     ],
@@ -68,7 +69,8 @@
     "PostToolUse": [
       { "matcher": "Edit|Write", "hooks": [
         { "type": "command", "command": ".claude/hooks/post-edit-format.sh" },
-        { "type": "command", "command": ".claude/hooks/post-edit-doc-mark.sh" }
+        { "type": "command", "command": ".claude/hooks/post-edit-doc-mark.sh" },
+        { "type": "command", "command": ".claude/hooks/post-edit-test-smell.sh" }
       ] }
     ]
   }

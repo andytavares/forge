@@ -37,4 +37,9 @@ Before introducing new code, this skill returns up to 5 existing candidates that
 
 Only if every top candidate has a documented reason it cannot be reused or extended (e.g. "different invariants", "deprecated", "lives in a package this layer cannot depend on"). Vague reasons ("it's not quite right") are not acceptable.
 
+A parallel implementation isn't free even when it looks isolated: every observable behavior of the
+new code becomes something callers will depend on (Hyrum's Law — see the `hyrum-s-law` concept). One
+maintained implementation with a clear contract beats two that drift apart. Prefer extending the
+existing one.
+
 See also: `references/reuse-anti-patterns.md`.

@@ -15,6 +15,10 @@ Workflow:
    - Linters / formatters (eslint, prettier, ruff, black, gofmt, golangci-lint, rustfmt, clippy, rubocop).
    - CI config (.github/workflows, .gitlab-ci.yml, .circleci, buildkite).
 2. For each, record the exact command the human would run.
+   - Also classify the build as **artifact-based** (Bazel, Buck, Pants — declarative targets) or
+     **task-based** (Make, raw Gradle/npm scripts — imperative steps). This signals what caching,
+     hermeticity, and distribution guarantees are available (see the
+     `task-based-vs-artifact-based-builds` and `hermetic-builds` concepts).
 3. Write the result to `.claude/stack.json` with this shape:
    { "languages": [...], "build": { ... }, "test": { ... }, "lint": { ... }, "format": { ... }, "ci": { ... }, "detected_at_commit": "<sha>" }
 4. Do not modify any other file.

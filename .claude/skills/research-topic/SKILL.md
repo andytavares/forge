@@ -72,6 +72,12 @@ For each option, assess:
 
 Assemble the output using the schema in `references/research-doc-schema.md`.
 
+There are no best practices, only trade-offs (see the `always-be-deciding` and
+`software-engineering-vs-programming` concepts). Frame the recommendation accordingly: name the
+**time/scale horizon** the choice is for (a throwaway script and a 10-year load-bearing service are
+different decisions even with the same options) and whether it's a **one-way or two-way door**. If
+the resulting decision is hard to reverse, record it with the `trade-off-record` skill.
+
 Rules:
 - Every external claim: `Source: <Title> — <URL>` + `Quote: "<verbatim>"` on the next line.
 - Every codebase claim: `file:line` citation inline.

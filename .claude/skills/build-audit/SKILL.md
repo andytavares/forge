@@ -34,7 +34,21 @@ Use this when the question is diagnostic: something is slow, flaky, or doesn't m
    - **Confidence** (1-5): how strong is the evidence?
    - **Impact** (1-5): if fixed, how much would symptom improve?
 
-6. **Recommend the smallest verifying experiment.** For the top 1-2 hypotheses, what's the cheapest test that would confirm or rule out? Often: change one flag, re-run, compare.
+6. **Check against the build-system standards.** Many build pathologies trace to a few root causes
+   (see the `task-based-vs-artifact-based-builds`, `hermetic-builds`, `build-dependency-correctness`,
+   and `distributed-builds` concepts):
+   - **Task-based vs artifact-based.** Imperative task-based builds (Make, raw Gradle scripts) lose
+     caching/parallelism/correctness that declarative artifact-based builds (Bazel, Buck, Pants) get
+     for free. If the symptom is "no caching" or "rebuilds everything," name this.
+   - **Hermeticity.** Non-reproducible builds usually have undeclared inputs: reads of the network,
+     wall clock, `$HOME`, ambient env vars, or system-installed tools. A build that isn't hermetic
+     can't be safely cached or distributed. Look for these leaks.
+   - **Dependency correctness.** Implicit/transitive dependencies that aren't declared cause both
+     under-building (stale) and over-building (slow). Check that declared deps match real deps.
+   - **Distribution.** If builds are slow and the system supports remote execution/caching, flat
+     build time as the codebase grows is the expected payoff — note if it's left on the table.
+
+7. **Recommend the smallest verifying experiment.** For the top 1-2 hypotheses, what's the cheapest test that would confirm or rule out? Often: change one flag, re-run, compare.
 
 ## Report shape
 

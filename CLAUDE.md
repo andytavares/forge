@@ -30,7 +30,8 @@
 
 - Use the `researcher` subagent to plan before touching code.
 - Use the `codebase-oracle` subagent for any question (technical or not) about the codebase — anyone on the team should be able to ask it anything.
-- Use the `code-reviewer` subagent before claiming a change is done.
+- Use the `code-reviewer` subagent before claiming a change is done; use `test-quality-reviewer` when the change adds or edits tests.
+- Before changing or removing a public/shared contract (rename, migrate, deprecate), use the `change-impact-analyst` subagent and the `large-scale-change` / `deprecation-plan` skills; record hard-to-reverse decisions with `trade-off-record`, and write a `postmortem` after a regression.
 - If a hook blocks you, do what the hook says — don't try to bypass it.
 
 ## 5. Reporting

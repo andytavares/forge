@@ -89,7 +89,7 @@ That's progressive disclosure. The keep-`SKILL.md`-under-500-lines guideline fro
 
 ### What I put in skills (and why each one earns its keep)
 
-The scaffold ships twelve, listed below. The pattern: a skill exists when there's a repeatable decision Claude must make that needs more than a sentence of rules.
+The scaffold's skills are listed below (see `README.md` for the current inventory count). The pattern: a skill exists when there's a repeatable decision Claude must make that needs more than a sentence of rules.
 
 > **v0.4.0 pivot:** The implementation pipeline skills (`task-decomposition`, `clarify-spec`, `implement-plan`) were removed. Forge is now a knowledge layer that enhances whatever implementation tool you already use. See [Layer 7: The knowledge base](#layer-7-the-knowledge-base----ask-for-everyone) and `INTEGRATING.md` for the context handoff protocol.
 
@@ -105,6 +105,11 @@ The scaffold ships twelve, listed below. The pattern: a skill exists when there'
 - **`build-audit`** — diagnoses build/test/tooling problems by collecting data points, cross-referencing official docs, and ranking hypotheses by confidence × impact.
 - **`project-constitution`** — interactive, LLM-assisted authoring of `.forge/constitution.md`. Scans the repo for signals, drafts all six required sections (Purpose, Non-negotiables, Architectural principles, Risk posture, Team conventions, Out of scope), and walks the user through accepting, editing, or skipping each before writing.
 - **`research-topic`** — five-phase feasibility research workflow: topic intake, codebase scan, option enumeration via official docs, analysis (feasibility/complexity/risk/codebase-fit), and structured document assembly. Composes `canonical-research` for all external sourcing. Output is a durable `research.md` artifact in `.forge/NNN-slug/`.
+- **`large-scale-change`** — plans and executes a change whose blast radius spans many call sites (renaming a public symbol, migrating an API, swapping a dependency) the way Google runs a Large-Scale Change.
+- **`deprecation-plan`** — scaffolds retiring an API, module, flag, or dependency as an engineering project with an owner, migration path, milestones, and a removal date.
+- **`trade-off-record`** — captures a lightweight ADR before a hard-to-reverse design decision: names the alternatives, the costs, and the time/scale horizon explicitly.
+- **`postmortem`** — scaffolds a blameless postmortem after something went wrong, finding the systemic root cause and fix rather than a person to blame.
+- **`test-quality-review`** — reviews the quality of test code (not just its existence) against Google's unit-testing standards: behavior over implementation, state over interaction, fakes over mocks, hermetic, DAMP, correctly sized.
 
 Notice what's not a skill: things that should always apply (those are in `CLAUDE.md`), things that need their own context window (those are subagents), and things that need deterministic enforcement (those are hooks).
 
@@ -117,7 +122,7 @@ A subagent is a markdown file in `.claude/agents/` (project-scoped) or `~/.claud
 1. **Each subagent runs in its own context window.** Their research and tool calls don't pollute the main session ([Create custom subagents](https://docs.claude.com/en/docs/claude-code/sub-agents)). For million-line codebases this is the single most important leverage.
 2. **Claude triggers them based on the `description` field.** Anthropic explicitly recommends phrases like "use PROACTIVELY" and "MUST BE USED" to make them auto-trigger ([Best practices for Claude Code](https://www.anthropic.com/engineering/claude-code-best-practices); [Subagents](https://docs.claude.com/en/docs/claude-code/sub-agents)).
 
-### The six subagents in the scaffold
+### The subagents in the scaffold
 
 Each one has one job. None of them tries to do another's job.
 
@@ -129,6 +134,8 @@ Each one has one job. None of them tries to do another's job.
 | `doc-keeper` | Sync markdown to current code. **No code edits.** | Read, Edit, Write, Bash, Grep, Glob |
 | `build-detective` | Detect stack, write `.claude/stack.json`. | Read, Bash, Grep, Glob |
 | `codebase-oracle` | Answer any question about the codebase. **No edits.** | Read, Grep, Glob, Bash, WebFetch |
+| `test-quality-reviewer` | Review the quality of tests (brittleness, mocking, hermeticity, sizing). **No edits.** | Read, Bash, Grep, Glob |
+| `change-impact-analyst` | Trace every caller/consumer of a symbol — the blast radius. **No edits.** | Read, Grep, Glob, Bash |
 
 The hard constraints (no edits / no code / no tests) are in the system prompt of each agent so the subagent will refuse if asked.
 
@@ -164,15 +171,17 @@ A hook is a shell command, HTTP endpoint, or prompt that fires at a lifecycle ev
 
 `PreToolUse` is the powerful one. It can return JSON containing `decision: "block"` and a `reason` string, and Claude has to take that feedback into account ([Hooks reference](https://docs.claude.com/en/docs/claude-code/hooks)). That's the enforcement primitive.
 
-### The seven hooks in the scaffold
+### The hooks in the scaffold
 
 1. **`session-start.sh`** — prints repo HEAD, branch, detected stack, uncommitted file count, and doc-staleness count. Also injects `.forge/constitution.md` between `=== project-constitution ===` and `=== end project-constitution ===` delimiters if the file exists and is under 2000 characters. stdout is added to Claude's context ([Hooks reference](https://docs.claude.com/en/docs/claude-code/hooks)).
 2. **`post-compact.sh`** — `PostCompact` hook. Reinjects `.forge/constitution.md` as `additionalContext` after context compaction, using the same 2000-character guard. Ensures the project constitution survives context window resets without manual intervention.
 3. **`prompt-augment.sh`** — `UserPromptSubmit` hook. Scans for intent verbs ("add", "implement", "create") and appends a reminder to run `find-reuse` first.
 4. **`pre-edit-guard.sh`** — `PreToolUse` on `Edit`/`Write`. Enforces TDD **only in packages that already have tests**. If the package directory contains zero test files, the hook logs a warning to stderr and lets the edit through — backfilling coverage is a separate decision, not something this hook should force on legacy code. In tested packages it returns `decision: "block"` with a message routing Claude to `test-author` first.
 5. **`post-edit-format.sh`** — `PostToolUse` on `Edit`/`Write`. Runs the formatter declared in `stack.json`. Same script humans run locally and CI runs.
-6. **`post-edit-doc-mark.sh`** — `PostToolUse` on `Edit`/`Write`. Bumps `staleness_score` in `doc-index.json` for any markdown that references the edited path.
+6. **`post-edit-doc-mark.sh`** — `PostToolUse` on `Edit`/`Write`. Bumps `staleness_score` in `doc-index.json` for any markdown that references the edited path — or references a directory (trailing `/`) that contains it, so docs tracking whole trees like `.claude/skills/` are flagged when anything in the tree changes.
 7. **`speckit-context-inject.sh`** — `UserPromptSubmit` hook. Detects when the prompt begins with `/speckit.*` and injects `additionalContext` containing the current stack summary, stale doc count, and latest research brief path. Requires no changes to Speckit — Forge context arrives via the standard Claude Code context window.
+8. **`post-edit-test-smell.sh`** — `PostToolUse` on `Edit`/`Write`. Acts only on test files; greps for common unit-test smells (hermeticity, interaction testing, mocking, non-determinism) and warns to stderr. Advisory only — it never blocks; the `test-quality-review` skill and `test-quality-reviewer` agent do the real review.
+9. **`prompt-change-mgmt.sh`** — `UserPromptSubmit` hook. Detects change-management intent (renaming, removing, or migrating a contract other code depends on) and injects a reminder to use the `deprecation-plan` / `large-scale-change` skills and the `change-impact-analyst` subagent. Advisory only.
 
 The hooks all live in `.claude/hooks/`, all start with `#!/usr/bin/env bash`, all read tool input JSON from stdin, and emit either nothing (exit 0 → proceed) or a small JSON object on stdout. That's the entire contract.
 
@@ -338,7 +347,7 @@ This is the only sustainable shape: docs and code are linked by a checked-in ind
 
 ## The slash commands
 
-Thirteen commands tie the knowledge layer together. Each is just a markdown file in `.claude/commands/` ([Slash commands](https://docs.claude.com/en/docs/claude-code/slash-commands)).
+Slash commands tie the knowledge layer together. Each is just a markdown file in `.claude/commands/` ([Slash commands](https://docs.claude.com/en/docs/claude-code/slash-commands)).
 
 > **v0.4.0:** The pipeline commands (`/forge-plan`, `/forge-tasks`, `/forge-clarify`, `/forge-implement`) were removed. Forge no longer owns the implementation workflow — it provides knowledge context to whichever tool you use (e.g. [Speckit](https://github.com/github/spec-kit)).
 
@@ -357,6 +366,11 @@ Thirteen commands tie the knowledge layer together. Each is just a markdown file
 | `/forge-audit <symptom>` | Diagnoses a build/test/tooling problem; ranks hypotheses by confidence × impact. |
 | `/forge-context` | Writes `.forge/context-snapshot.json` — stack, stale docs, latest research brief — for any external tool to consume. |
 | `/forge-constitution` | Interactive authoring of `.forge/constitution.md` — create, update a section, or regenerate from scratch. |
+| `/forge-lsc <change>` | Large-scale change: `change-impact-analyst` enumerates callers, then `large-scale-change` plans and executes the migration shard by shard. |
+| `/forge-deprecate <target>` | Scaffolds a managed deprecation (owner, replacement, milestones, removal date) at `.forge/deprecations/NNN-slug.md`. |
+| `/forge-decision <decision>` | Records a lightweight trade-off ADR (alternatives, costs, horizon, reversibility) at `.forge/decisions/NNN-slug.md`. |
+| `/forge-postmortem <failure>` | Writes a blameless postmortem (timeline, systemic root cause, owned actions) at `.forge/postmortems/NNN-slug.md`. |
+| `/forge-test-review` | Runs `test-quality-reviewer` against the test files in the current diff. |
 
 The knowledge-base commands (`/ask`, `/stats`, `/survey`, `/audit`) route to the `codebase-oracle` and its skills. The knowledge-layer workflow: `/constitution` (one-time setup) → `/research` (feasibility) → `/forge-context` (export snapshot for your implementation tool).
 
