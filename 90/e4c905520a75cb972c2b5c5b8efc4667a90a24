@@ -1,0 +1,104 @@
+.claude/commands/forge-decision.md
+  s_27c3b41aded2d4::t_c11bceb4435bef 1-8
+.claude/commands/forge-test-review.md
+  s_27c3b41aded2d4::t_af9657c283d45d 1-12
+.claude/skills/codebase-stats/SKILL.md
+  s_27c3b41aded2d4::t_cb96d45178a871 10-15
+.claude/skills/large-scale-change/SKILL.md
+  s_27c3b41aded2d4::t_946b243bc89581 1-65
+.claude/skills/large-scale-change/references/lsc-playbook.md
+  s_27c3b41aded2d4::t_4e5e75d599bbc3 1-48
+.claude/hooks/prompt-change-mgmt.sh
+  s_27c3b41aded2d4::t_7c259031648592 1-24
+.claude/skills/canonical-research/SKILL.md
+  s_27c3b41aded2d4::t_cb7cb8384b7905 8-11
+.claude/skills/trade-off-record/SKILL.md
+  s_27c3b41aded2d4::t_425b90fbf6bac1 1-55
+.claude/settings.json
+  s_27c3b41aded2d4::t_2fdd25c27f8a09 72-73
+  s_27c3b41aded2d4::t_a8a26016f6cb5d 59
+.claude/agents/change-impact-analyst.md
+  s_27c3b41aded2d4::t_237fc19b23e094 1-54
+.claude/skills/postmortem/SKILL.md
+  s_27c3b41aded2d4::t_3a4c54b5209677 1-56
+.claude/commands/forge-deprecate.md
+  s_27c3b41aded2d4::t_6afc5b80d2d2ef 1-8
+.claude/skills/test-quality-review/SKILL.md
+  s_27c3b41aded2d4::t_047a396bc7aaeb 1-65
+.claude/commands/forge-postmortem.md
+  s_27c3b41aded2d4::t_ad87641a03a67e 1-8
+.claude/hooks/post-edit-test-smell.sh
+  s_27c3b41aded2d4::t_ec76f35824d33d 1-40,48-57
+  s_27c3b41aded2d4::t_3ea233c784a827 41-47
+.claude/agents/code-reviewer.md
+  s_27c3b41aded2d4::t_f401ab58eaf657 9-10,12-24,28-29,31
+.claude/skills/doc-sync/SKILL.md
+  s_27c3b41aded2d4::t_2cd5a357cb87e2 16-18,25-31
+.claude/skills/repo-conventions/SKILL.md
+  s_27c3b41aded2d4::t_946de8ab31f602 8-13
+.claude/skills/deprecation-plan/SKILL.md
+  s_27c3b41aded2d4::t_7eb633a7f5e146 1-60
+.claude/agents/build-detective.md
+  s_27c3b41aded2d4::t_786fb0539cdd20 18-21
+CLAUDE.md
+  s_27c3b41aded2d4::t_837811f86ac71c 33-34
+.claude/agents/test-quality-reviewer.md
+  s_27c3b41aded2d4::t_15e3d094426bb4 1-42
+forge-blog.md
+  s_27c3b41aded2d4::t_b90b17da0d7156 108-112
+  s_27c3b41aded2d4::t_4e5b90a649b494 174
+  s_27c3b41aded2d4::t_d5338b10946675 183-184
+  s_27c3b41aded2d4::t_155da2a28d9d06 350
+  s_27c3b41aded2d4::t_e797ed7403475c 137-138
+  s_27c3b41aded2d4::t_093a442bb8d0b5 181
+  s_27c3b41aded2d4::t_8e7c38f7f7f741 125
+  s_27c3b41aded2d4::t_54af92ab46b5ba 92
+  s_27c3b41aded2d4::t_6a61f355f159ad 369-373
+.claude/skills/tdd-workflow/SKILL.md
+  s_27c3b41aded2d4::t_59b628e6a99261 13
+  s_27c3b41aded2d4::t_7446bbd5804329 11
+.claude/agents/test-author.md
+  s_27c3b41aded2d4::t_7de5379ea01347 17-33,37
+.claude/skills/find-reuse/SKILL.md
+  s_27c3b41aded2d4::t_dedb8841831659 40-44
+.claude/commands/forge-lsc.md
+  s_27c3b41aded2d4::t_cf17ba65b13998 1-9
+README.md
+  s_27c3b41aded2d4::t_4a864db11a5e7c 10-13
+.claude/skills/code-review/SKILL.md
+  s_27c3b41aded2d4::t_b723649f761d5f 8-10,12-35
+.claude/agents/researcher.md
+  s_27c3b41aded2d4::t_f83f08c556c28b 16-20
+.claude/skills/research-topic/SKILL.md
+  s_27c3b41aded2d4::t_bb00b19d0acbcc 75-80
+.claude/doc-index.json
+  s_27c3b41aded2d4::t_88bb2d8eff1b9c 7,38
+  s_27c3b41aded2d4::t_9c50fd36b80319 44
+.claude/skills/test-quality-review/references/test-smell-rubric.md
+  s_27c3b41aded2d4::t_fa2511c33a9ac3 1-48
+.claude/agents/doc-keeper.md
+  s_27c3b41aded2d4::t_ba8deb58974cec 23-26
+.claude-plugin/plugin.json
+  s_27c3b41aded2d4::t_80f3363ce51042 4
+.claude/hooks/post-edit-doc-mark.sh
+  s_27c3b41aded2d4::t_f90777cc758525 3-6,22-23,27-30
+  s_27c3b41aded2d4::t_8d8fca6b6bce75 17-20
+.claude/skills/build-audit/SKILL.md
+  s_27c3b41aded2d4::t_2f944d08ae70a4 37-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "90e4c905520a75cb972c2b5c5b8efc4667a90a24",
+  "prompts": {},
+  "sessions": {
+    "s_27c3b41aded2d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f02d9554-5f8b-42c2-953e-4cef99315e17",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Andrew <andrew.tavaes87@gmail.com>"
+    }
+  }
+}
